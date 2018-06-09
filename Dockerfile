@@ -1,4 +1,4 @@
-FROM cloudposse/terraform-root-modules:0.3.2 as terraform-root-modules
+FROM cloudposse/terraform-root-modules:0.3.3 as terraform-root-modules
 
 FROM cloudposse/geodesic:0.9.18
 
@@ -20,6 +20,7 @@ ENV TF_DYNAMODB_TABLE="cpco-testing-terraform-state-lock"
 
 # Terraform vars
 # https://www.terraform.io/docs/configuration/variables.html
+ENV TF_VAR_account_id="126450723953"
 ENV TF_VAR_region="us-west-2"
 ENV TF_VAR_namespace="cpco"
 ENV TF_VAR_stage="testing"
