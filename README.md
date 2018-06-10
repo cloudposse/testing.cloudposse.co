@@ -1,6 +1,6 @@
 # testing.cloudposse.co
 
-Example Terraform Reference Architecture for Geodesic Module Automated Testing Organization in AWS.
+Terraform Reference Architecture that implements a [Geodesic](https://github.com/cloudposse/geodesic) Module for an Automated Testing Organization in AWS.
 
 __NOTE:__ Before creating the testing infrastructure, you need to provision the Parent ("Root") Organization in AWS (because it creates resources needed for all other accounts).
 
