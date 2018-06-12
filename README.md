@@ -30,7 +30,7 @@ Here is the list of tools we use to provision `cloudposse.co` infrastructure:
 
 __NOTE:__ You need to do it only once.
 
-Configure AWS profile in `~/.aws/config`. Make sure to change username (username@cloudposse.com) to your own.
+Configure AWS profile in `~/.aws/config`. Make sure to change username (admin@cloudposse.co) to your own.
 
 ```bash
 [profile cpco-testing-admin]
