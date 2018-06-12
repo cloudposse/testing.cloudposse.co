@@ -5,29 +5,29 @@ FROM cloudposse/geodesic:0.9.18
 ENV DOCKER_IMAGE="cloudposse/testing.cloudposse.co"
 ENV DOCKER_TAG="latest"
 
+# Geodesic banner
 ENV BANNER="testing.cloudposse.co"
-
-# Default AWS Profile name
-ENV AWS_DEFAULT_PROFILE="cpco-testing-admin"
 
 # AWS Region
 ENV AWS_REGION="us-west-2"
 
-# Terraform State Bucket
-ENV TF_BUCKET="cpco-testing-terraform-state"
-ENV TF_BUCKET_REGION="us-west-2"
-ENV TF_DYNAMODB_TABLE="cpco-testing-terraform-state-lock"
-
 # Terraform vars
-# https://www.terraform.io/docs/configuration/variables.html
+ENV TF_VAR_region="${AWS_REGION}"
 ENV TF_VAR_account_id="126450723953"
-ENV TF_VAR_region="us-west-2"
 ENV TF_VAR_namespace="cpco"
 ENV TF_VAR_stage="testing"
 ENV TF_VAR_domain_name="testing.cloudposse.co"
 
 # chamber KMS config
-ENV CHAMBER_KMS_KEY_ALIAS="alias/cpco-testing-chamber"
+ENV CHAMBER_KMS_KEY_ALIAS="alias/${TF_VAR_namespace}-${TF_VAR_stage}-chamber"
+
+# Terraform State Bucket
+ENV TF_BUCKET_REGION="${AWS_REGION}"
+ENV TF_BUCKET="${TF_VAR_namespace}-${TF_VAR_stage}-terraform-state"
+ENV TF_DYNAMODB_TABLE="${TF_VAR_namespace}-${TF_VAR_stage}-terraform-state-lock"
+
+# Default AWS Profile name
+ENV AWS_DEFAULT_PROFILE="${TF_VAR_namespace}-${TF_VAR_stage}-admin"
 
 # Copy root modules
 COPY --from=terraform-root-modules /aws/tfstate-backend/ /conf/tfstate-backend/
@@ -45,7 +45,7 @@ RUN s3 fstab '${TF_BUCKET}' '/' '/secrets/tf'
 # kops config
 ENV KOPS_CLUSTER_NAME="us-west-2.testing.cloudposse.co"
 ENV KOPS_DNS_ZONE=${KOPS_CLUSTER_NAME}
-ENV KOPS_STATE_STORE="s3://cpco-testing-kops-state"
+ENV KOPS_STATE_STORE="s3://${TF_VAR_namespace}-${TF_VAR_stage}-kops-state"
 ENV KOPS_STATE_STORE_REGION="us-west-2"
 ENV KOPS_AVAILABILITY_ZONES="us-west-2a,us-west-2b,us-west-2c"
 ENV KOPS_BASTION_PUBLIC_NAME="bastion"
