@@ -17,6 +17,7 @@ ENV TF_VAR_account_id="126450723953"
 ENV TF_VAR_namespace="cpco"
 ENV TF_VAR_stage="testing"
 ENV TF_VAR_domain_name="testing.cloudposse.co"
+ENV TF_VAR_zone_name="testing.cloudposse.co."
 
 # chamber KMS config
 ENV CHAMBER_KMS_KEY_ALIAS="alias/${TF_VAR_namespace}-${TF_VAR_stage}-chamber"
