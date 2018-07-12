@@ -1,9 +1,14 @@
+.git
+.gitignore
+.editorconfig
+
 # Compiled files
 *.tfstate
 *.tfstate.backup
 .terraform.tfstate.lock.info
 
 # Module directory
+**/.terraform
 .terraform/
 .idea
 *.iml
