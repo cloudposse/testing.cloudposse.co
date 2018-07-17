@@ -1,0 +1,187 @@
+name: "testing.cloudposse.co"
+
+# Canonical GitHub repo
+github_repo: "cloudposse/testing.cloudposse.co"
+
+# License of this project
+license: "APACHE2"
+
+# Badges to display
+badges:
+  - name: "Codefresh Build Status"
+    image: "https://g.codefresh.io/api/badges/build?repoOwner=cloudposse&repoName=testing.cloudposse.co&branch=master&pipelineName=testing.cloudposse.co&accountName=cloudposse&type=cf-1"
+    url: "https://g.codefresh.io/pipelines/testing.cloudposse.co/builds"
+  - name: "Latest Release"
+    image: "https://img.shields.io/github/release/cloudposse/testing.cloudposse.co.svg"
+    url: "https://github.com/cloudposse/testing.cloudposse.co/releases"
+  - name: "Slack Community"
+    image: "https://slack.cloudposse.com/badge.svg"
+    url: "https://slack.cloudposse.com"
+
+description: |-
+  Terraform Reference Architecture that implements a [Geodesic](https://github.com/cloudposse/geodesic) Module for an Automated Testing Organization in AWS.
+  
+  This account is suitable for running automated tests of Terraform modules. 
+
+  __NOTE:__ Before creating the Testing infrastructure, you need to provision the [Parent ("Root") Organization](https://github.com/cloudposse/root.cloudposse.co) in AWS (because it creates resources needed for all other accounts). Follow the steps in [README](https://github.com/cloudposse/root.cloudposse.co) first. You need to do it only once.
+
+introduction: |-
+  We use [geodesic](https://github.com/cloudposse/geodesic) to define and build world-class cloud infrastructures backed by AWS and powered by Kubernetes.
+
+  `geodesic` exposes many tools that can be used to define and provision AWS and Kubernetes resources.
+
+  Here is the list of tools we use to provision the `testing.cloudposse.co` infrastructure:
+
+  * [aws-vault](https://github.com/99designs/aws-vault)
+  * [chamber](https://github.com/segmentio/chamber)
+  * [terraform](https://www.terraform.io/)
+
+include:
+  - "docs/terraform.md"
+  - "docs/targets.md"
+
+quickstart: |-
+
+  ### Setup AWS Role
+
+  __NOTE:__ You need to do it only once.
+
+  Configure AWS profile in `~/.aws/config`. Make sure to change username (username@cloudposse.com) to your own.
+
+  ```bash
+  [profile cpco-testing-admin]
+  region=us-west-2
+  role_arn=arn:aws:iam::126450723953:role/OrganizationAccountAccessRole
+  mfa_serial=arn:aws:iam::323330167063:mfa/username@cloudposse.com
+  source_profile=cpco
+  ```
+
+  ### Install and setup aws-vault
+
+  __NOTE:__ You need to do it only once.
+
+  We use [aws-vault](https://docs.cloudposse.com/tools/aws-vault/) to store IAM credentials in your operating system's secure keystore and then generates temporary credentials from those to expose to your shell and applications.
+
+  Install [aws-vault](https://docs.cloudposse.com/tools/aws-vault/) on your local computer first.
+
+  On MacOS, you may use `homebrew cask`
+
+  ```bash
+  brew cask install aws-vault
+  ```
+
+  Then setup your secret credentials for AWS in `aws-vault`
+  ```bash
+  aws-vault add --backend file cpco
+  ```
+
+  __NOTE:__ You should set `AWS_VAULT_BACKEND=file` in your shell rc config (e.g. `~/.bashrc`) so it persists.
+
+  For more info, see [aws-vault](https://docs.cloudposse.com/tools/aws-vault/)
+
+
+examples: |-
+  ### Build Docker Image
+  
+  ```
+  # Initialize the project's build-harness
+  make init
+
+  # Build docker image
+  make docker/build
+  ```
+
+  ### Install the wrapper shell
+  ```bash
+  make install
+  ```
+
+  ### Run the shell
+  ```bash
+  testing.cloudposse.co
+  ```
+
+  ### Login to AWS with your MFA device
+  ```bash
+  assume-role
+  ```
+
+  __NOTE:__ Before provisioning AWS resources with Terraform, you need to create `tfstate-backend` first (S3 bucket to store Terraform state and DynamoDB table for state locking).
+
+  Follow the steps in this [README](https://github.com/cloudposse/terraform-root-modules/blob/master/aws/tfstate-backend/). You need to do it only once.
+
+  After `tfstate-backend` has been provisioned, follow the rest of the instructions in the order shown below.
+
+
+  ### Provision `dns` with Terraform
+
+  Change directory to `dns` folder
+  ```bash
+  cd /conf/dns
+  ```
+
+  Run Terraform
+  ```bash
+  init-terraform
+  terraform plan
+  terraform apply
+  ```
+
+  For more info, see [geodesic-with-terraform](https://docs.cloudposse.com/geodesic/module/with-terraform/)
+
+  ### Provision `cloudtrail` with Terraform
+
+  ```bash
+  cd /conf/cloudtrail
+  init-terraform
+  terraform plan
+  terraform apply
+  ```
+
+  ### Provision `chamber` with Terraform
+
+  ```bash
+  cd /conf/chamber
+  init-terraform
+  terraform plan
+  terraform apply
+  ```
+
+
+related:
+  - name: "Packages"
+    description: "Cloud Posse installer and distribution of native apps"
+    url: "https://github.com/cloudposse/packages"
+
+  - name: "Build Harness"
+    description: "Collection of Makefiles to facilitate building Golang projects, Dockerfiles, Helm charts, and more"
+    url: "https://github.com/cloudposse/dev"
+
+  - name: "terraform-root-modules"
+    description: "Collection of Terraform \"root module\" invocations for provisioning reference architectures"
+    url: "https://github.com/cloudposse/terraform-root-modules"
+
+  - name: "root.cloudposse.co"
+    description: "Example Terraform Reference Architecture of a Geodesic Module for a Parent (\"Root\") Organization in AWS."
+    url: "https://github.com/cloudposse/root.cloudposse.co"
+
+  - name: "audit.cloudposse.co"
+    description: "Example Terraform Reference Architecture of a Geodesic Module for an Audit Logs Organization in AWS."
+    url: "https://github.com/cloudposse/audit.cloudposse.co"
+
+  - name: "prod.cloudposse.co"
+    description: "Example Terraform Reference Architecture of a Geodesic Module for a Production Organization in AWS."
+    url: "https://github.com/cloudposse/prod.cloudposse.co"
+
+  - name: "staging.cloudposse.co"
+    description: "Example Terraform Reference Architecture of a Geodesic Module for a Staging Organization in AWS."
+    url: "https://github.com/cloudposse/staging.cloudposse.co"
+
+  - name: "dev.cloudposse.co"
+    description: "Example Terraform Reference Architecture of a Geodesic Module for a Development Sandbox Organization in AWS."
+    url: "https://github.com/cloudposse/dev.cloudposse.co"
+ 
+references:
+  - name: "Cloud Posse Documentation"
+    description: "Complete documentation for the Cloud Posse solution"
+    url: "https://docs.cloudposse.com"

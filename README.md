@@ -11,18 +11,6 @@ This account is suitable for running automated tests of Terraform modules.
 
 __NOTE:__ Before creating the Testing infrastructure, you need to provision the [Parent ("Root") Organization](https://github.com/cloudposse/root.cloudposse.co) in AWS (because it creates resources needed for all other accounts). Follow the steps in [README](https://github.com/cloudposse/root.cloudposse.co) first. You need to do it only once.
 
-## Introduction
-
-We use [geodesic](https://github.com/cloudposse/geodesic) to define and build world-class cloud infrastructures backed by AWS and powered by Kubernetes.
-
-`geodesic` exposes many tools that can be used to define and provision AWS and Kubernetes resources.
-
-Here is the list of tools we use to provision the `testing.cloudposse.co` infrastructure:
-
-* [aws-vault](https://github.com/99designs/aws-vault)
-* [chamber](https://github.com/segmentio/chamber)
-* [terraform](https://www.terraform.io/)
-
 
 ---
 
@@ -75,6 +63,8 @@ Then setup your secret credentials for AWS in `aws-vault`
 ```bash
 aws-vault add --backend file cpco
 ```
+
+__NOTE:__ You should set `AWS_VAULT_BACKEND=file` in your shell rc config (e.g. `~/.bashrc`) so it persists.
 
 For more info, see [aws-vault](https://docs.cloudposse.com/tools/aws-vault/)
 
