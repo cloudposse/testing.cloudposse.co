@@ -27,6 +27,18 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 
 
+## Introduction
+
+We use [geodesic](https://github.com/cloudposse/geodesic) to define and build world-class cloud infrastructures backed by AWS and powered by Kubernetes.
+
+`geodesic` exposes many tools that can be used to define and provision AWS and Kubernetes resources.
+
+Here is the list of tools we use to provision the `testing.cloudposse.co` infrastructure:
+
+* [aws-vault](https://github.com/99designs/aws-vault)
+* [chamber](https://github.com/segmentio/chamber)
+* [terraform](https://www.terraform.io/)
+
 
 ## Quick Start
 
