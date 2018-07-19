@@ -1,4 +1,4 @@
-FROM cloudposse/terraform-root-modules:0.4.5 as terraform-root-modules
+FROM cloudposse/terraform-root-modules:0.4.8 as terraform-root-modules
 
 FROM cloudposse/geodesic:0.11.6
 
@@ -39,6 +39,9 @@ COPY --from=terraform-root-modules /aws/chamber/ /conf/chamber/
 COPY --from=terraform-root-modules /aws/cloudtrail/ /conf/cloudtrail/
 COPY --from=terraform-root-modules /aws/kops/ /conf/kops/
 COPY --from=terraform-root-modules /aws/kops-aws-platform/ /conf/kops-aws-platform/
+
+# Place configuration in 'conf/' directory
+COPY conf/ /conf/
 
 # Filesystem entry for tfstate
 RUN s3 fstab '${TF_BUCKET}' '/' '/secrets/tf'
