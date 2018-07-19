@@ -47,13 +47,13 @@ Here is the list of tools we use to provision the `testing.cloudposse.co` infras
 
 __NOTE:__ You need to do it only once.
 
-Configure AWS profile in `~/.aws/config`. Make sure to change username (username@cloudposse.com) to your own.
+Configure AWS profile in `~/.aws/config`. Make sure to change username (username@cloudposse.co) to your own.
 
 ```bash
 [profile cpco-testing-admin]
 region=us-west-2
 role_arn=arn:aws:iam::126450723953:role/OrganizationAccountAccessRole
-mfa_serial=arn:aws:iam::323330167063:mfa/username@cloudposse.com
+mfa_serial=arn:aws:iam::323330167063:mfa/username@cloudposse.co
 source_profile=cpco
 ```
 
