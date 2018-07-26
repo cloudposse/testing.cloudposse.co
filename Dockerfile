@@ -1,6 +1,6 @@
-FROM cloudposse/terraform-root-modules:0.4.8 as terraform-root-modules
+FROM cloudposse/terraform-root-modules:0.5.0 as terraform-root-modules
 
-FROM cloudposse/geodesic:0.11.6
+FROM cloudposse/geodesic:0.11.10
 
 ENV DOCKER_IMAGE="cloudposse/testing.cloudposse.co"
 ENV DOCKER_TAG="latest"
@@ -17,7 +17,8 @@ ENV TF_VAR_account_id="126450723953"
 ENV TF_VAR_namespace="cpco"
 ENV TF_VAR_stage="testing"
 ENV TF_VAR_domain_name="testing.cloudposse.co"
-ENV TF_VAR_zone_name="testing.cloudposse.co."
+ENV TF_VAR_zone_name="testing.cloudposse.co"
+ENV TF_VAR_zone_id="Z3SO0TKDDQ0RGG"
 
 # chamber KMS config
 ENV CHAMBER_KMS_KEY_ALIAS="alias/${TF_VAR_namespace}-${TF_VAR_stage}-chamber"
