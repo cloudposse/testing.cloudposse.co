@@ -3,16 +3,15 @@
 .editorconfig
 
 # Compiled files
+**/.terraform/*
 *.tfstate
-*.tfstate.backup
-.terraform.tfstate.lock.info
+*.tfstate.*
+*.tfvars
 
 # Module directory
-**/.terraform
-.terraform/
-.idea
-*.iml
+.terraform
+**/.idea
+**/*.iml
 
-# Build Harness
-.build-harness
-build-harness/
+**/.build-harness
+**/build-harness
