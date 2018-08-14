@@ -3,7 +3,7 @@ export DOCKER_ORG ?= cloudposse
 export DOCKER_IMAGE ?= $(DOCKER_ORG)/$(CLUSTER)
 export DOCKER_TAG ?= latest
 export DOCKER_IMAGE_NAME ?= $(DOCKER_IMAGE):$(DOCKER_TAG)
-export DOCKER_BUILD_FLAGS = 
+export DOCKER_BUILD_FLAGS =
 export README_DEPS ?= docs/targets.md docs/terraform.md
 export INSTALL_PATH ?= /usr/local/bin
 
@@ -27,7 +27,7 @@ push:
 
 ## Install wrapper script from geodesic container
 install:
-	@docker run --rm $(DOCKER_IMAGE_NAME) | sudo bash -s $(DOCKER_TAG)
+	@docker run --rm $(DOCKER_IMAGE_NAME) | sudo -E bash -s $(DOCKER_TAG)
 
 ## Start the geodesic shell by calling wrapper script
 run:
