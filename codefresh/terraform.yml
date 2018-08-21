@@ -12,6 +12,7 @@ steps:
       - cf_export AWS_PROFILE=default
       - cf_export AWS_DEFAULT_PROFILE=default
       - cf_export VAULT_SERVER_ENABLED=false
+      - cf_export BANNER=demo
 
   build_image:
     title: Build image
