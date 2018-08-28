@@ -16,8 +16,9 @@ steps:
     image_name: testing.cloudposse.co
     dockerfile: Dockerfile
 
-  test:
-    title: Show plan
+  diff:
+    title: Show diff
+    description: Show differences between current deployed state and planned state
     image: ${{build_image}}
     working_directory: ${{build_image}}
     commands:

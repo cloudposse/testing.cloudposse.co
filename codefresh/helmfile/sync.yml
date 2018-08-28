@@ -16,8 +16,9 @@ steps:
     image_name: testing.cloudposse.co
     dockerfile: Dockerfile
 
-  test:
-    title: Show plan
+  sync:
+    title: Sync changes to cluster
+    description: "Sync all changes to kubernetes cluster"
     image: ${{build_image}}
     working_directory: ${{build_image}}
     commands:
