@@ -22,4 +22,7 @@ steps:
     image: ${{build_image}}
     working_directory: ${{build_image}}
     commands:
+      # Install or upgrade tiller
+      - "make helm/toolbox/upsert"
+      # Calculate differences
       - "chamber exec kops -- helmfile --selector default=true diff"
