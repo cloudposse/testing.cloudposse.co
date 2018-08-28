@@ -1,4 +1,4 @@
-FROM cloudposse/terraform-root-modules:0.5.3 as terraform-root-modules
+FROM cloudposse/terraform-root-modules:0.5.4 as terraform-root-modules
 
 FROM cloudposse/helmfiles:0.4.0 as helmfiles
 
@@ -10,7 +10,7 @@ ENV DOCKER_IMAGE="cloudposse/testing.cloudposse.co"
 ENV DOCKER_TAG="latest"
 
 # Geodesic banner
-ENV BANNER="testing.cloudposse.co"
+ENV BANNER="testing"
 
 # AWS Region
 ENV AWS_REGION="us-west-2"
