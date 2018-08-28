@@ -1,8 +1,10 @@
 FROM cloudposse/terraform-root-modules:0.5.3 as terraform-root-modules
 
-FROM cloudposse/helmfiles:0.3.2 as helmfiles
+FROM cloudposse/helmfiles:0.4.0 as helmfiles
 
-FROM cloudposse/geodesic:0.16.4
+FROM cloudposse/packages:0.8.1 as packages
+
+FROM cloudposse/geodesic:0.19.0
 
 ENV DOCKER_IMAGE="cloudposse/testing.cloudposse.co"
 ENV DOCKER_TAG="latest"
@@ -32,6 +34,10 @@ ENV TF_DYNAMODB_TABLE="${TF_VAR_namespace}-${TF_VAR_stage}-terraform-state-lock"
 
 # Default AWS Profile name
 ENV AWS_DEFAULT_PROFILE="${TF_VAR_namespace}-${TF_VAR_stage}-admin"
+ENV AWS_MFA_PROFILE="${TF_VAR_namespace}-root-admin"
+
+# Copy from packages
+COPY --from=packages /packages/bin/helmfile /usr/local/bin/
 
 # Copy root modules
 COPY --from=terraform-root-modules /aws/tfstate-backend/ /conf/tfstate-backend/
@@ -65,6 +71,8 @@ ENV MASTER_MACHINE_TYPE="t2.medium"
 ENV NODE_MACHINE_TYPE="t2.medium"
 ENV NODE_MAX_SIZE="2"
 ENV NODE_MIN_SIZE="2"
+
+COPY rootfs/ /
 
 # Generate kops manifest
 RUN build-kops-manifest

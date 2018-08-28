@@ -8,11 +8,6 @@ steps:
     commands:
       - cf_export BUILD_HARNESS_VERSION=0.9.0
       - cf_export GIT_BRANCH=${{CF_BRANCH}}
-      - cf_export TF_VAR_aws_assume_role_arn="arn:aws:iam::126450723953:role/OrganizationAccountAccessRole"
-      - cf_export AWS_PROFILE=default
-      - cf_export AWS_DEFAULT_PROFILE=default
-      - cf_export VAULT_SERVER_ENABLED=false
-      - cf_export BANNER=demo
 
   build_image:
     title: Build image
@@ -22,10 +17,8 @@ steps:
     dockerfile: Dockerfile
 
   test:
-    title: Execute tests
+    title: Show plan
     image: ${{build_image}}
     working_directory: ${{build_image}}
-    cmd:
-      - "-l"
-      - "-c"
-      - "./tests/run.sh"
+    commands:
+      - "chamber exec kops -- helmfile --selector default=true diff"
