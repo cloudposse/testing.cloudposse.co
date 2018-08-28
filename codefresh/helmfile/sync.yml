@@ -20,7 +20,7 @@ steps:
     title: Sync changes to cluster
     description: "Sync all changes to kubernetes cluster"
     image: ${{build_image}}
-    working_directory: ${{build_image}}
+    working_directory: /conf/
     commands:
       # Select cluster
       - "kubectl config use-context ${KUBE_CONTEXT}"
