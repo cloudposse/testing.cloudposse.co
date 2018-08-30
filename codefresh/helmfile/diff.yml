@@ -1,0 +1,28 @@
+# Build a service with environment variables
+version: '1.0'
+
+steps:
+  init_variables:
+    title: Init variables
+    image: alpine
+    commands:
+      - cf_export BUILD_HARNESS_VERSION=0.9.0
+      - cf_export GIT_BRANCH=${{CF_BRANCH}}
+
+  build_image:
+    title: Build image
+    type: build
+    description: Build geodesic module
+    image_name: testing.cloudposse.co
+    dockerfile: Dockerfile
+
+  diff:
+    title: Show diff
+    description: Show differences between current deployed state and planned state
+    image: ${{build_image}}
+    working_directory: /conf/
+    commands:
+      # Select cluster
+      - "kubectl config use-context ${KUBE_CONTEXT}"
+      # Calculate differences
+      - "chamber exec kops -- helmfile --selector default=true diff"
