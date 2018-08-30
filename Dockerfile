@@ -13,6 +13,10 @@ ENV BANNER="testing"
 # AWS Region
 ENV AWS_REGION="us-west-2"
 
+# Overrides
+ENV NGINX_INGRESS_REPLICA_COUNT=6
+
+
 # Terraform vars
 ENV TF_VAR_region="${AWS_REGION}"
 ENV TF_VAR_account_id="126450723953"
