@@ -8,7 +8,6 @@ steps:
     commands:
       - cf_export BUILD_HARNESS_VERSION=0.7.0
       - cf_export GIT_BRANCH=${{CF_BRANCH}}
-
   build_image:
     title: Build image
     type: build
