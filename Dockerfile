@@ -10,6 +10,8 @@ ENV DOCKER_TAG="latest"
 # Geodesic banner
 ENV BANNER="testing"
 
+ENV NGINX_INGRESS_BACKEND_REPLICA_COUNT=4
+
 # AWS Region
 ENV AWS_REGION="us-west-2"
 
