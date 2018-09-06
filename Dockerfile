@@ -2,6 +2,8 @@ FROM cloudposse/terraform-root-modules:0.5.6 as terraform-root-modules
 
 FROM cloudposse/helmfiles:0.4.0 as helmfiles
 
+FROM cloudposse/test-harness:0.0.0-updates as test-harness
+
 FROM cloudposse/geodesic:0.28.0
 
 ENV DOCKER_IMAGE="cloudposse/testing.cloudposse.co"
@@ -47,6 +49,9 @@ COPY --from=terraform-root-modules /aws/kops-aws-platform/ /conf/kops-aws-platfo
 # Copy helmfiles
 COPY --from=helmfiles /helmfile.d/ /conf/helmfile.d/
 COPY --from=helmfiles /scripts/ /conf/scripts/
+
+# Copy test-harness
+COPY --from=test-harness /tests/ /conf/tests/
 
 # Place configuration in 'conf/' directory
 COPY conf/ /conf/
