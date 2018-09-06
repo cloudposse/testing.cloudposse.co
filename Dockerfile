@@ -2,7 +2,7 @@ FROM cloudposse/terraform-root-modules:0.5.6 as terraform-root-modules
 
 FROM cloudposse/helmfiles:0.4.0 as helmfiles
 
-FROM cloudposse/test-harness:0.0.0-updates as test-harness
+FROM cloudposse/test-harness:0.1.1 as test-harness
 
 FROM cloudposse/geodesic:0.28.0
 
