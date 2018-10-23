@@ -10,14 +10,14 @@ projects:
   autoplan:
     when_modified:
       - "*.yaml"
-    enabled: true
+    enabled: false
   apply_requirements:
     - "approved"
 
 
 - name: "alpinist-terraform"
   workflow: "terraform"
-  dir: "conf/alpinist/terraform"
+  dir: "conf/alpinist/terraform/"
   workspace: "default"
   terraform_version: "v0.11.7"
   autoplan:
@@ -29,7 +29,7 @@ projects:
 
 - name: "alpinist-cloudformation"
   workflow: "cloudformation"
-  dir: "conf/alpinist"
+  dir: "conf/alpinist/"
   autoplan:
     when_modified:
       - "*.yaml"
