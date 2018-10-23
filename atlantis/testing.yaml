@@ -2,26 +2,24 @@ version: 2
 
 projects:
 
-- name: "alpinist/terraform"
+- name: "alpinist-terraform"
   workflow: "terraform"
   dir: "conf/alpinist/terraform"
   workspace: "default"
   terraform_version: "v0.11.7"
   autoplan:
     when_modified:
-      - "*.tf"
-      - "conf/alpinist"
+      - "conf/*"
     enabled: true
   apply_requirements:
     - "approved"
 
-- name: "alpinist/cloudformation"
+- name: "alpinist-cloudformation"
   workflow: "cloudformation"
   dir: "conf/alpinist"
   autoplan:
     when_modified:
-      - "*.yaml"
-      - "conf/alpinist"
+      - "conf/*"
     enabled: true
   apply_requirements:
     - "approved"
