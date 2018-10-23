@@ -2,9 +2,9 @@ version: 2
 
 projects:
 
-- name: "terraform/atlantis"
+- name: "alpinist/terraform"
   workflow: "terraform"
-  dir: "conf/atlantis/terraform"
+  dir: "conf/alpinist/terraform"
   workspace: "default"
   terraform_version: "v0.11.7"
   autoplan:
@@ -14,9 +14,9 @@ projects:
   apply_requirements:
     - "approved"
 
-- name: "terraform/cloudformation"
+- name: "alpinist/cloudformation"
   workflow: "cloudformation"
-  dir: "conf/atlantis"
+  dir: "conf/alpinist"
   autoplan:
     when_modified:
       - "**/*.yaml"
