@@ -10,6 +10,7 @@ projects:
   autoplan:
     when_modified:
       - "*.tf"
+      - "conf/alpinist"
     enabled: true
   apply_requirements:
     - "approved"
@@ -20,6 +21,7 @@ projects:
   autoplan:
     when_modified:
       - "*.yaml"
+      - "conf/alpinist"
     enabled: true
   apply_requirements:
     - "approved"
