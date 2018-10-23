@@ -9,7 +9,7 @@ projects:
   terraform_version: "v0.11.7"
   autoplan:
     when_modified:
-      - "atlantis/testing.yaml"
+      - "*.tf"
     enabled: true
   apply_requirements:
     - "approved"
@@ -19,7 +19,7 @@ projects:
   dir: "conf/alpinist"
   autoplan:
     when_modified:
-      - "*"
+      - "*.yaml"
     enabled: true
   apply_requirements:
     - "approved"
