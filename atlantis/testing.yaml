@@ -1,0 +1,49 @@
+version: 2
+
+projects:
+
+- name: "terraform/atlantis"
+  workflow: "terraform"
+  dir: "conf/atlantis/terraform"
+  workspace: "default"
+  terraform_version: "v0.11.7"
+  autoplan:
+    when_modified:
+      - "*.tf"
+    enabled: true
+  apply_requirements:
+    - "approved"
+
+- name: "terraform/cloudformation"
+  workflow: "cloudformation"
+  dir: "conf/atlantis"
+  autoplan:
+    when_modified:
+      - "*.yaml"
+    enabled: true
+  apply_requirements:
+    - "approved"
+
+workflows:
+  # Backing services
+  terraform:
+    plan:
+      steps:
+      - run: "init-terraform"
+      - run: "terraform plan -no-color -input=false -var-file testing.tfvars -out $PLANFILE"
+    apply:
+      steps:
+      - run: "init-terraform"
+      - run: "terraform apply -no-color -input=false -var-file testing.tfvars $PLANFILE"
+
+  # Lambda
+  cloudformation:
+    plan:
+      steps:
+      - run: "make cf/bucket 2>/dev/null || true" 
+      - run: "make cf/package TEMPLATE_FILE=${PLANFILE}"
+      - run: "make cf/plan TEMPLATE_FILE=${PLANFILE}"
+    apply:
+      steps:
+      - run: "make cf/deploy TEMPLATE_FILE=$(PLANFILE}"
+      - run: "make cf/sync"

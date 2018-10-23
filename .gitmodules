@@ -1,0 +1,3 @@
+[submodule "conf/alpinist"]
+	path = conf/alpinist
+	url = https://github.com/cloudposse/alpinist.git
