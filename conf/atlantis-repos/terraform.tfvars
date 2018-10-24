@@ -4,6 +4,7 @@ terragrunt = {
 
     extra_arguments "retry_lock" {
       commands = [
+        "init",
         "apply",
         "destroy",
         "plan",
