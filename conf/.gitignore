@@ -1,13 +1,16 @@
 # Compiled files
-**/.terraform/*
 *.tfstate
-*.tfstate.*
-*.tfvars
+*.tfstate.backup
+.terraform.tfstate.lock.info
 
 # Module directory
-.terraform
-**/.idea
-**/*.iml
+.terraform/
+.idea
+*.iml
 
-**/.build-harness
-**/build-harness
+# Terragrunt
+.terragrunt-cache/
+
+# Build Harness
+.build-harness
+build-harness/
