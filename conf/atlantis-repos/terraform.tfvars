@@ -2,9 +2,8 @@ terragrunt = {
   terraform {
     source = "git::https://github.com/cloudposse/terraform-github-repository-webhooks.git//?ref=tags/0.1.0"
 
-    extra_arguments "retry_lock" {
+    extra_arguments "crud" {
       commands = [
-        "init",
         "apply",
         "destroy",
         "plan",
@@ -12,7 +11,7 @@ terragrunt = {
 
       arguments = [
         "-lock-timeout=1m", 
-        "-no-color", 
+	"-no-color",
         "-input=false"
       ]
 
@@ -21,6 +20,7 @@ terragrunt = {
         TF_VAR_webhook_secret = "${get_env("ATLANTIS_GH_WEBHOOK_SECRET", "")}"
       }
     }
+
   }
 
   remote_state {

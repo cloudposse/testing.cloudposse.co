@@ -1,4 +1,7 @@
-plan:
+init:
+	@[ -d .terragrunt-cache ] || terragrunt init -no-color
+
+plan: init
 	chamber exec atlantis github -- terragrunt plan
 
 apply:
