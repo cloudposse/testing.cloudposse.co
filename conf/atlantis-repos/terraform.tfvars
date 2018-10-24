@@ -36,6 +36,7 @@ terragrunt = {
 }
 
 webhook_url = "https://atlantis.testing.cloudposse.co/events"
+webhook_active = true
 
 github_organization = "cloudposse"
 
