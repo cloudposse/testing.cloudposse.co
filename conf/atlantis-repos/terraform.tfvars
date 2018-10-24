@@ -41,6 +41,6 @@ github_organization = "cloudposse"
 
 github_repositories = ["testing.cloudposse.co", "alpinist"]
 
-events = ["pull_request_review_comment", "pull_request", "pull_request_review", "issue_comment"]
+events = ["pull_request_review_comment", "pull_request", "pull_request_review", "issue_comment", "push"]
 
 name = "web"
