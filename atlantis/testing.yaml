@@ -63,7 +63,7 @@ workflows:
   cloudformation:
     plan:
       steps:
-      - run: "make cf/bucket 2>/dev/null || true" 
+      - run: "make cf/bucket 2>/dev/null || true"
       - run: "make cf/package TEMPLATE_FILE=${PLANFILE}"
       - run: "make cf/plan TEMPLATE_FILE=${PLANFILE}"
     apply:
