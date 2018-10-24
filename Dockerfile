@@ -2,7 +2,7 @@ FROM cloudposse/terraform-root-modules:0.5.7 as terraform-root-modules
 
 FROM cloudposse/helmfiles:0.7.2 as helmfiles
 
-FROM cloudposse/geodesic:dev
+FROM cloudposse/geodesic:0.38.0
 
 ENV DOCKER_IMAGE="cloudposse/testing.cloudposse.co"
 ENV DOCKER_TAG="latest"
@@ -52,6 +52,9 @@ COPY --from=helmfiles /scripts/ /conf/scripts/
 
 # Place configuration in 'conf/' directory
 COPY conf/ /conf/
+
+# Install configuration dependencies
+RUN make -C /conf install
 
 # Filesystem entry for tfstate
 RUN s3 fstab '${TF_BUCKET}' '/' '/secrets/tf'

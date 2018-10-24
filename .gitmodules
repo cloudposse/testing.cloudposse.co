@@ -1,3 +1,7 @@
 [submodule "conf/alpinist"]
 	path = conf/alpinist
 	url = https://github.com/cloudposse/alpinist.git
+[submodule "conf/atlantis"]
+	path = conf/atlantis
+	url = https://github.com/cloudposse/geodesic-aws-atlantis.git
+	branch = init
