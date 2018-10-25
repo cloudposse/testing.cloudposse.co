@@ -4,4 +4,4 @@
 [submodule "conf/atlantis"]
 	path = conf/atlantis
 	url = https://github.com/cloudposse/geodesic-aws-atlantis.git
-	branch = init
+	branch = 0.1.1
