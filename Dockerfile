@@ -1,10 +1,10 @@
-FROM cloudposse/terraform-root-modules:0.5.6 as terraform-root-modules
+FROM cloudposse/terraform-root-modules:0.5.7 as terraform-root-modules
 
-FROM cloudposse/helmfiles:0.4.0 as helmfiles
+FROM cloudposse/helmfiles:0.7.2 as helmfiles
 
 FROM cloudposse/test-harness:0.1.1 as test-harness
 
-FROM cloudposse/geodesic:0.28.0
+FROM cloudposse/geodesic:0.32.8
 
 ENV DOCKER_IMAGE="cloudposse/testing.cloudposse.co"
 ENV DOCKER_TAG="latest"
@@ -45,6 +45,8 @@ COPY --from=terraform-root-modules /aws/chamber/ /conf/chamber/
 COPY --from=terraform-root-modules /aws/cloudtrail/ /conf/cloudtrail/
 COPY --from=terraform-root-modules /aws/kops/ /conf/kops/
 COPY --from=terraform-root-modules /aws/kops-aws-platform/ /conf/kops-aws-platform/
+COPY --from=terraform-root-modules /aws/eks/ /conf/eks/
+COPY --from=terraform-root-modules /aws/eks-backing-services-peering/ /conf/eks-backing-services-peering/
 
 # Copy helmfiles
 COPY --from=helmfiles /helmfile.d/ /conf/helmfile.d/
