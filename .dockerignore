@@ -3,7 +3,7 @@
 .editorconfig
 
 # Compiled files
-**/.terraform/*
+**/.terraform
 *.tfstate
 *.tfstate.*
 *.tfvars
