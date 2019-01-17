@@ -1,0 +1,6 @@
+deps:
+	terraform init
+	
+reset:
+	git reset --hard HEAD
+	git clean -f -d
