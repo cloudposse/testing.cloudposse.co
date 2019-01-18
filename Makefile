@@ -32,3 +32,16 @@ install:
 ## Start the geodesic shell by calling wrapper script
 run:
 	$(CLUSTER)
+
+run/atlantis:
+	docker run --privileged -it -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SECURITY_TOKEN -e AWS_SESSION_TOKEN -e ATLANTIS_ENABLED=true $(DOCKER_IMAGE_NAME)
+
+run/atlantis/shell:
+	docker run --privileged -it \
+		-e AWS_ACCESS_KEY_ID \
+		-e AWS_SECRET_ACCESS_KEY \
+		-e AWS_SECURITY_TOKEN \
+		-e AWS_SESSION_TOKEN \
+		-e ATLANTIS_ENABLED=true \
+		$(DOCKER_IMAGE_NAME) -c bash
+

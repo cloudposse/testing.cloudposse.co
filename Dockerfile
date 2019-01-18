@@ -2,7 +2,7 @@ FROM cloudposse/terraform-root-modules:0.5.7 as terraform-root-modules
 
 FROM cloudposse/helmfiles:0.8.6 as helmfiles
 
-FROM cloudposse/geodesic:0.45.1
+FROM cloudposse/geodesic:0.61.0
 
 ENV DOCKER_IMAGE="cloudposse/testing.cloudposse.co"
 ENV DOCKER_TAG="latest"
@@ -35,7 +35,6 @@ ENV AWS_DEFAULT_PROFILE="${TF_VAR_namespace}-${TF_VAR_stage}-admin"
 ENV AWS_MFA_PROFILE="${TF_VAR_namespace}-root-admin"
 
 # Copy root modules
-COPY --from=terraform-root-modules /aws/tfstate-backend/ /conf/tfstate-backend/
 COPY --from=terraform-root-modules /aws/account-dns/ /conf/account-dns/
 COPY --from=terraform-root-modules /aws/acm/ /conf/acm/
 COPY --from=terraform-root-modules /aws/backing-services/ /conf/backing-services/
@@ -73,5 +72,9 @@ COPY rootfs/ /
 
 # Generate kops manifest
 RUN build-kops-manifest
+
+# Install atlantis
+RUN curl -fsSL -o /usr/bin/atlantis https://github.com/cloudposse/atlantis/releases/download/0.5.2/atlantis_linux_amd64 && \
+    chmod 755 /usr/bin/atlantis
 
 WORKDIR /conf/
