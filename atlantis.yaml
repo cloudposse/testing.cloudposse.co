@@ -2,6 +2,21 @@ version: 2
 
 projects:
 
+- name: "ecs"
+  workflow: "make"
+  dir: "conf/ecs"
+  workspace: "default"
+  terraform_version: "v0.11.10"
+  autoplan:
+    when_modified:
+      - "Makefile*"
+      - "*.tf"
+      - "*.tfvars"
+      - ".envrc"
+    enabled: true
+  apply_requirements:
+    - "approved"
+
 - name: "tfstate-backend"
   workflow: "make"
   dir: "conf/tfstate-backend"
@@ -17,13 +32,148 @@ projects:
   apply_requirements:
     - "approved"
 
+- name: "account-dns"
+  workflow: "make"
+  dir: "conf/account-dns"
+  workspace: "default"
+  terraform_version: "v0.11.10"
+  autoplan:
+    when_modified:
+      - "Makefile*"
+      - "*.tf"
+      - "*.tfvars"
+      - ".envrc"
+    enabled: true
+  apply_requirements:
+    - "approved"
+
+- name: "acm"
+  workflow: "make"
+  dir: "conf/acm"
+  workspace: "default"
+  terraform_version: "v0.11.10"
+  autoplan:
+    when_modified:
+      - "Makefile*"
+      - "*.tf"
+      - "*.tfvars"
+      - ".envrc"
+    enabled: true
+  apply_requirements:
+    - "approved"
+
+- name: "backing-services"
+  workflow: "make"
+  dir: "conf/backing-services"
+  workspace: "default"
+  terraform_version: "v0.11.10"
+  autoplan:
+    when_modified:
+      - "Makefile*"
+      - "*.tf"
+      - "*.tfvars"
+      - ".envrc"
+    enabled: true
+  apply_requirements:
+    - "approved"
+
+- name: "chamber"
+  workflow: "make"
+  dir: "conf/chamber"
+  workspace: "default"
+  terraform_version: "v0.11.10"
+  autoplan:
+    when_modified:
+      - "Makefile*"
+      - "*.tf"
+      - "*.tfvars"
+      - ".envrc"
+    enabled: true
+  apply_requirements:
+    - "approved"
+
+- name: "cloudtrail"
+  workflow: "make"
+  dir: "conf/cloudtrail"
+  workspace: "default"
+  terraform_version: "v0.11.10"
+  autoplan:
+    when_modified:
+      - "Makefile*"
+      - "*.tf"
+      - "*.tfvars"
+      - ".envrc"
+    enabled: true
+  apply_requirements:
+    - "approved"
+
+- name: "eks"
+  workflow: "make"
+  dir: "conf/eks"
+  workspace: "default"
+  terraform_version: "v0.11.10"
+  autoplan:
+    when_modified:
+      - "Makefile*"
+      - "*.tf"
+      - "*.tfvars"
+      - ".envrc"
+    enabled: true
+  apply_requirements:
+    - "approved"
+
+- name: "eks-backing-services-peering"
+  workflow: "make"
+  dir: "conf/eks-backing-services-peering"
+  workspace: "default"
+  terraform_version: "v0.11.10"
+  autoplan:
+    when_modified:
+      - "Makefile*"
+      - "*.tf"
+      - "*.tfvars"
+      - ".envrc"
+    enabled: true
+  apply_requirements:
+    - "approved"
+
+- name: "kops"
+  workflow: "make"
+  dir: "conf/kops"
+  workspace: "default"
+  terraform_version: "v0.11.10"
+  autoplan:
+    when_modified:
+      - "Makefile*"
+      - "*.tf"
+      - "*.tfvars"
+      - ".envrc"
+    enabled: true
+  apply_requirements:
+    - "approved"
+
+- name: "kops-aws-platform"
+  workflow: "make"
+  dir: "conf/kops-aws-platform"
+  workspace: "default"
+  terraform_version: "v0.11.10"
+  autoplan:
+    when_modified:
+      - "Makefile*"
+      - "*.tf"
+      - "*.tfvars"
+      - ".envrc"
+    enabled: true
+  apply_requirements:
+    - "approved"
+
+
 workflows:
   make:
     plan:
       steps:
-        - run: "make reset"
-        - run: "make deps"
-        - run: "make plan | scenery --no-color"
+        - run: "make reset deps"
+        - run: "set -o pipefail; make plan | tfmask | scenery --no-color"
     apply:
       steps:
-        - run: "make apply"
+        - run: "set -o pipefail; make apply | tfmask"
