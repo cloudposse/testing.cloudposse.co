@@ -1,5 +1,3 @@
-FROM cloudposse/terraform-root-modules:0.5.7 as terraform-root-modules
-
 FROM cloudposse/helmfiles:0.8.6 as helmfiles
 
 FROM cloudposse/geodesic:0.67.0
@@ -34,16 +32,6 @@ ENV TF_DYNAMODB_TABLE="${TF_VAR_namespace}-${TF_VAR_stage}-terraform-state-lock"
 ENV AWS_DEFAULT_PROFILE="${TF_VAR_namespace}-${TF_VAR_stage}-admin"
 ENV AWS_MFA_PROFILE="${TF_VAR_namespace}-root-admin"
 
-# Copy root modules
-COPY --from=terraform-root-modules /aws/account-dns/ /conf/account-dns/
-COPY --from=terraform-root-modules /aws/acm/ /conf/acm/
-COPY --from=terraform-root-modules /aws/backing-services/ /conf/backing-services/
-COPY --from=terraform-root-modules /aws/chamber/ /conf/chamber/
-COPY --from=terraform-root-modules /aws/cloudtrail/ /conf/cloudtrail/
-COPY --from=terraform-root-modules /aws/kops/ /conf/kops/
-COPY --from=terraform-root-modules /aws/kops-aws-platform/ /conf/kops-aws-platform/
-COPY --from=terraform-root-modules /aws/eks/ /conf/eks/
-COPY --from=terraform-root-modules /aws/eks-backing-services-peering/ /conf/eks-backing-services-peering/
 
 # Copy helmfiles
 COPY --from=helmfiles /helmfile.d/ /conf/helmfile.d/
@@ -51,6 +39,9 @@ COPY --from=helmfiles /scripts/ /conf/scripts/
 
 # Place configuration in 'conf/' directory
 COPY conf/ /conf/
+
+# Install configuration dependencies
+RUN make -C /conf install
 
 # Filesystem entry for tfstate
 RUN s3 fstab '${TF_BUCKET}' '/' '/secrets/tf'
