@@ -8,6 +8,8 @@ ENV DOCKER_TAG="latest"
 # General
 ENV NAMESPACE="cpco"
 ENV STAGE="testing"
+ENV DOMAIN_NAME="testing.cloudposse.co"
+ENV ZONE_ID="Z3SO0TKDDQ0RGG"
 
 # Geodesic banner
 ENV BANNER="testing"
@@ -17,7 +19,9 @@ ENV MOTD_URL="https://geodesic.sh/motd"
 
 # AWS
 ENV AWS_REGION="us-west-2"
+ENV REGION="${AWS_REGION}"
 ENV AWS_ACCOUNT_ID="126450723953"
+ENV ACCOUNT_ID="${AWS_ACCOUNT_ID}"
 ENV AWS_ROOT_ACCOUNT_ID="323330167063"
 
 # chamber KMS config
