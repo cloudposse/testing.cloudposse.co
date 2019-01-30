@@ -5,3 +5,8 @@ deps:
 ## Reset this project
 reset:
 	rm -rf Makefile *.tf .terraform
+
+## Coldstart setup
+coldstart:
+	terraform apply -target module.dns
+	terraform apply
