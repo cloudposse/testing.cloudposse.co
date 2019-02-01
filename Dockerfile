@@ -1,6 +1,6 @@
 FROM cloudposse/helmfiles:0.8.6 as helmfiles
 
-FROM cloudposse/geodesic:0.67.0
+FROM cloudposse/geodesic:0.68.0
 
 ENV DOCKER_IMAGE="cloudposse/testing.cloudposse.co"
 ENV DOCKER_TAG="latest"
