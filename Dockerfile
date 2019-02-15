@@ -1,6 +1,6 @@
 FROM cloudposse/helmfiles:0.8.6 as helmfiles
 
-FROM cloudposse/geodesic:0.67.0
+FROM cloudposse/geodesic:0.71.0
 
 ENV DOCKER_IMAGE="cloudposse/testing.cloudposse.co"
 ENV DOCKER_TAG="latest"
@@ -56,6 +56,7 @@ ENV KOPS_STATE_STORE="s3://${NAMESPACE}-${STAGE}-kops-state"
 ENV KOPS_STATE_STORE_REGION="us-west-2"
 ENV KOPS_AVAILABILITY_ZONES="us-west-2a,us-west-2b,us-west-2c"
 ENV KOPS_BASTION_PUBLIC_NAME="bastion"
+ENV KOPS_AWS_IAM_AUTHENTICATOR_ENABLED="true"
 ENV BASTION_MACHINE_TYPE="t2.medium"
 ENV MASTER_MACHINE_TYPE="t2.medium"
 ENV NODE_MACHINE_TYPE="t2.medium"
