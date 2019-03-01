@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
+
 # Exit on all errors
 set -e
 
-aws s3 ls
+cd /conf/tests && eval "$(direnv export bash)"
+cd /conf/acm   && eval "$(direnv export bash)"
 
-cd /conf/kops
-
-init-terraform
+terraform init
 
 terraform plan

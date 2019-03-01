@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-
-# Example of running container as though we were in CI
+set -e
+# Example of running container locally as though we were in CI for the purpose of local testing.
+source <(aws-vault exec cpco-testing-admin --assume-role-ttl=12h -- sh -c 'export -p')
 
 docker run --rm --name testing \
 	-e TF_VAR_aws_assume_role_arn="arn:aws:iam::126450723953:role/OrganizationAccountAccessRole" \
@@ -14,4 +15,4 @@ docker run --rm --name testing \
 	-e AWS_DEFAULT_REGION \
 	-e VAULT_SERVER_ENABLED=false \
 	--volume $(pwd)/testing/:/conf/testing/ \
-	cloudposse/testing.cloudposse.co:latest -l -c "tests/run.sh"
+	cloudposse/testing.cloudposse.co:latest -l -c "pwd;./tests/run.sh"

@@ -43,9 +43,6 @@ COPY --from=helmfiles /scripts/ /conf/scripts/
 # Place configuration in 'conf/' directory
 COPY conf/ /conf/
 
-# Install configuration dependencies
-RUN make -C /conf install
-
 # Filesystem entry for tfstate
 RUN s3 fstab '${TF_BUCKET}' '/' '/secrets/tf'
 
@@ -64,6 +61,7 @@ ENV NODE_MAX_SIZE="4"
 ENV NODE_MIN_SIZE="4"
 
 COPY rootfs/ /
+COPY tests/ /conf/tests/
 
 # Generate kops manifest
 RUN build-kops-manifest
