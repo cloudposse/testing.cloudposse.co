@@ -1,4 +1,4 @@
-FROM cloudposse/helmfiles:0.8.6 as helmfiles
+FROM cloudposse/helmfiles:0.18.0 as helmfiles
 
 FROM cloudposse/geodesic:0.71.0
 
