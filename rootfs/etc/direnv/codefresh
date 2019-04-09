@@ -4,7 +4,7 @@
 # Prevent recursion
 unset BASH_ENV
 
-which cf_export || (echo "ERROR: cf_export not found"; exit 1)
+#which cf_export || (echo "ERROR: cf_export not found"; exit 1)
 
 # Disable `direnv` output for scripts
 export DIRENV_LOG_FORMAT=
