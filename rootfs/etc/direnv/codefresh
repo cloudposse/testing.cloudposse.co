@@ -4,18 +4,14 @@
 # Prevent recursion
 unset BASH_ENV
 
-#which cf_export || (echo "ERROR: cf_export not found"; exit 1)
-
 # Disable `direnv` output for scripts
 export DIRENV_LOG_FORMAT=
-
-pwd 
-ls -al 
 
 # Allow codefresh shared volume
 direnv allow ${CF_CF_VOLUME_PATH}
 
-export TFENV_BLACKLIST="${TFENV_BLACKLIST:-^(AWS_ACCESS_KEY_ID|AWS_SECRET_ACCESS_KEY|AWS_SECURITY_TOKEN|AWS_SESSION_TOKEN|ATLANTIS_.*|GITHUB_.*)$}"
+# By default block everything
+export TFENV_BLACKLIST="${TFENV_BLACKLIST:-^.*$}"
 
 # Process the `.envrc`
-direnv export json  | jq -r '. | to_entries[] | select (.key|test("DIRENV")|not) | "cf_export " + .key + "=" + .value'
+direnv export json  | jq -r '. | to_entries[] | select (.key|test("DIRENV")|not) | "cf_export " + .key + "=" + .value' | bash
