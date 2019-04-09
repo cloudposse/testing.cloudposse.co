@@ -1,28 +1,128 @@
-# Build a service with environment variables
+# Codefresh pipeline for Terraform GitOps using the Geodesic Cloud Automation Shell
+# - https://github.com/cloudposse/geodesic
+# - https://codefresh.io
+# - https://terraform.io
+#
 version: '1.0'
 
+# Next steps
+# 1. Create "init" script like that for atlantis, but calls `cf_export`; export only TF_*
+# 2. Ensure workdir is a shared volume
+# 2. "Solve" ssh agent problem
+# 3. Figure out workdir. It's a combination of the shared volume and pipeline name (or env)
+# 4. Create a new github token
+# 4. Slack notification (nice to have)
+environment:
+  - BUILD_HARNESS_VERSION=0.18.0
+  - AWS_ASSUME_ROLE_ARN="arn:aws:iam::126450723953:role/OrganizationAccountAccessRole"
+    #  - BASH_ENV=/etc/direnv/bash
+
+  # Github Commenter
+  - GITHUB_TOKEN=XXXXXXXXXXXXXXXX
+  - GITHUB_OWNER=${{CF_REPO_OWNER}}
+  - GITHUB_REPO=${{CF_REPO_NAME}}
+  - GITHUB_COMMENT_TYPE=pr
+  - GITHUB_PR_ISSUE_NUMBER=${{CF_PULL_REQUEST_NUMBER}}
+  - GITHUB_COMMENT_FORMAT=<details><summary>Output from `terraform {{env "BANNER"}}`</summary><br><br><pre>{{regexReplaceAllLiteral `\\n` . `<br>` }}<pre></details>
+
+  # Terraform settings
+  - TF_INPUT=false
+
+  # Disable color on all terraform commands
+  - TF_CLI_DEFAULT_NO_COLOR=true
+
+  # Auto approve apply
+  - TF_CLI_APPLY_AUTO_APPROVE=true
+
+  # Cache the terraform providers in the shared volume to speed up builds
+  - TF_PLUGIN_CACHE_DIR=${{CF_VOLUME_PATH}}/terraform
+
+  # Changing TF_LOG to any higher level may expose secrets or generate too much data
+  - TF_LOG=WARN
+
+stages:
+  - Prepare
+  - Init
+  - Plan
+  - Apply
+
 steps:
-  init_variables:
-    title: Init variables
-    image: alpine
-    commands:
-      - cf_export BUILD_HARNESS_VERSION=0.9.0
-      - cf_export GIT_BRANCH=${{CF_BRANCH}}
-      - cf_export TF_VAR_aws_assume_role_arn="arn:aws:iam::126450723953:role/OrganizationAccountAccessRole"
-      - cf_export BANNER=demo
+  main_clone:
+    title: "Clone repository"
+    type: git-clone
+    stage: Prepare
+    description: "Initialize"
+    repo: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
+    git: CF-default
+    revision: ${{CF_REVISION}}
 
   build_image:
     title: Build image
+    stage: Prepare
     type: build
     description: Build geodesic module
     image_name: testing.cloudposse.co
     dockerfile: Dockerfile
 
-  test:
-    title: Execute tests
+  direnv:
+    title: Run direnv to setup the environment with `cf_export` https://direnv.net
+    stage: Prepare
     image: ${{build_image}}
-    working_directory: ${{build_image}}
-    cmd:
-      - "-l"
-      - "-c"
-      - "./tests/run.sh"
+    working_directory: &cwd ${{build_image}}
+    cmd: &default_cmd
+    - "-l"
+    commands: 
+      - cf_export <(direnv exec . sh -c 'export -p | sed "s/^declare -x //"')
+
+  init:
+    title: Run terraform init
+    stage: Init
+    image: ${{build_image}}
+    working_directory: *cwd
+    cmd: *default_cmd
+    commands:
+      - | # Export environment from chamber to shell
+          source <(chamber exec atlantis -- sh -c "export -p")
+          source <(ssh-agent)
+          ssh-add - <<<${ATLANTIS_SSH_PRIVATE_KEY}
+          terraform init
+
+  plan:
+    title: Run terraform plan
+    stage: Plan
+    image: ${{build_image}}
+    working_directory: *cwd
+    cmd: *default_cmd
+    environment:
+      - BANNER=plan
+    commands:
+    - terraform plan | tfmask | scenery > plan.txt
+    - github-commenter < plan.txt
+
+  approve:
+    type: pending-approval
+    stage: Apply
+    title: Apply changes?
+
+  apply:
+    title: Run terraform apply
+    stage: Apply
+    image: ${{build_image}}
+    working_directory: *cwd
+    cmd: *default_cmd
+    environment:
+      - BANNER=apply
+    commands:
+    - terraform apply | tfmask | scenery > apply.txt
+    - github-commenter < apply.txt
+
+  cleanup:
+    title: Cleanup
+    stage: Apply
+    image: ${{build_image}}
+    working_directory: *cwd
+    cmd: *default_cmd
+    commands:
+    - rm -f plan.out plan.txt apply.txt
+
+

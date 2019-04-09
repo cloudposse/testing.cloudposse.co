@@ -61,7 +61,6 @@ ENV NODE_MAX_SIZE="4"
 ENV NODE_MIN_SIZE="4"
 
 COPY rootfs/ /
-COPY tests/ /conf/tests/
 
 # Generate kops manifest
 RUN build-kops-manifest
