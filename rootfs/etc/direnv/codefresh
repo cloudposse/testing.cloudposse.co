@@ -8,7 +8,7 @@ unset BASH_ENV
 export DIRENV_LOG_FORMAT=
 
 # Allow codefresh shared volume
-direnv allow ${CF_CF_VOLUME_PATH}
+direnv allow ${CF_VOLUME_PATH}
 
 # By default block everything
 export TFENV_BLACKLIST="${TFENV_BLACKLIST:-^.*$}"
