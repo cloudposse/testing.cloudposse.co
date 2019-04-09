@@ -1,0 +1,20 @@
+# This is a `BASH_ENV` script to load `direnv` configuration inside of codefresh pipelines
+# https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html
+
+# Prevent recursion
+unset BASH_ENV
+
+which cf_export || (echo "ERROR: cf_export not found"; exit 1)
+
+# Disable `direnv` output for scripts
+export DIRENV_LOG_FORMAT=
+
+# Allow current working directory (if we have permission)
+if [ -f .envrc ] && [ -w /etc/direnv/allow ]; then
+	direnv allow .
+fi
+
+export TFENV_BLACKLIST="${TFENV_BLACKLIST:-^(AWS_ACCESS_KEY_ID|AWS_SECRET_ACCESS_KEY|AWS_SECURITY_TOKEN|AWS_SESSION_TOKEN|ATLANTIS_.*|GITHUB_.*)$}"
+
+# Process the `.envrc`
+direnv export json  | jq -r '. | to_entries[] | select (.key|test("DIRENV")|not) | "cf_export " + .key + "=" + .value'
