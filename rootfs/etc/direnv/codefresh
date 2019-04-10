@@ -12,8 +12,5 @@ export DIRENV_LOG_FORMAT=
 # Allow current working directory
 direnv allow .
 
-# By default block everything
-export TFENV_BLACKLIST="${TFENV_BLACKLIST:-^.*$}"
-
 # Process the `.envrc` and map it to `cf_export` commands
 direnv export json  | jq -r '. | to_entries[] | select (.key|test("DIRENV")|not) | "cf_export " + .key + "=" + (.value|tojson)' | bash -e
