@@ -97,18 +97,20 @@ steps:
   plan:
     title: Run `terraform plan`
     stage: Plan
-    fail_fast: true
+    fail_fast: false
     image: ${{build_image}}
     working_directory: *cwd
     environment:
     - TF_COMMAND=plan
     commands:
-    - set -eo pipefail
+    - set -o pipefail
     # Obtain a terraform plan, mask any secrets, and format it
     - terraform plan | tfmask | scenery | tee plan.txt
     - export TF_EXIT_CODE=$?
     # Comment back to PR with plan output
     - github-commenter < plan.txt
+    # Terraform exit code of 0 or 2 is success; 1 is error
+    - exit [ $TF_EXIT_CODE -ne 1 ]
 
   approve:
     type: pending-approval
@@ -118,18 +120,20 @@ steps:
   apply:
     title: Run `terraform apply`
     stage: Apply
-    fail_fast: true
+    fail_fast: false
     image: ${{build_image}}
     working_directory: *cwd
     environment:
     - TF_COMMAND=apply
     commands:
-    - set -eo pipefail
+    - set -o pipefail
     # Apply the terraform plan and mask any output
     - terraform apply | tfmask | tee apply.txt
     - export TF_EXIT_CODE=$?
     # Comment back on github with outcome
     - github-commenter < apply.txt  
+    # Exit the step based on outcome of terraform apply
+    - exit $TF_EXIT_CODE
 
   cleanup:
     title: Cleanup
