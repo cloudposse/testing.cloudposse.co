@@ -1,6 +1,10 @@
 <details>
-  <summary>Output from `terraform {{env "BANNER"}}`</summary>
+  <summary>Output from `terraform {{env "BANNER"}}` ![Codefresh Build Status](https://g.codefresh.io/api/badges/build?repoOwner={{ env "CF_REPO_OWNER" }}&repoName={{ env "CF_REPO_NAME" }}&branch={{ env "CF_BRANCH" | default "master" }}&pipelineName={{ env "CF_PIPELINE_NAME" | default "terraform" }}&accountName={{ env "CF_ACCOUNT" }}type=cf-1)</summary>
   <br/>
   <br/>
   <pre>{{regexReplaceAllLiteral `\\n` . `<br>` }}<pre>
 </details>
+
+
+
+ 
