@@ -31,6 +31,6 @@ Ran `terraform {{ env "TF_COMMAND" }}` in `{{ env "PROJECT" }}`.
 {{ end }}
 {{ else if env "TF_COMMAND" | eq "apply" }}
 {{ if or (env "TF_EXIT_CODE" | eq "0") }}
-![Ready to Merge](https://random-d.uk/api/randomimg?type=gif)
+[![Ready to Merge](https://random-d.uk/api/randomimg?type=gif)](https://g.codefresh.io/build/{{ env "CF_BUILD_ID" }})
 {{ end }}
 {{ end }}
