@@ -24,7 +24,7 @@ steps:
     repo: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
     git: CF-default
     revision: ${{CF_REVISION}}
-    
+   
   build_image:
     title: Build image
     stage: Prepare
@@ -32,7 +32,16 @@ steps:
     description: Build geodesic cloud automation shell
     image_name: ${{CF_REPO_NAME}}
     dockerfile: Dockerfile
-    
+
+  cancel:
+    title: "Cancel Builds"
+    stage: Prepare
+    image: ${{build_image}}
+    description: "Cancel any builds stuck in pending-approval status"
+    commands:
+    - apk add codefresh@cloudposse
+    - codefresh get builds --pipeline-name=${{CF_ACCOUNT}}/${{CF_ACCOUNT}}/${{CF_PIPELINE_NAME}} -o json | jq -r '.[] | select (.status|test("pending-approval")) | .id' | xargs -r -n 1 codefresh terminate
+     
   env:
     title: Setup Environment
     stage: Init
@@ -103,12 +112,14 @@ steps:
     environment:
     - TF_COMMAND=plan
     commands:
-    - set -eo pipefail
+    - set +e -xo pipefail
     # Obtain a terraform plan, mask any secrets, and format it
     - terraform plan | tfmask | scenery | tee plan.txt
     - export TF_EXIT_CODE=$?
     # Comment back to PR with plan output
     - github-commenter < plan.txt
+    # Terraform exit code of 0 or 2 is success; 1 is error
+    - '[ $TF_EXIT_CODE -ne 1 ]'
 
   approve:
     type: pending-approval
@@ -124,12 +135,14 @@ steps:
     environment:
     - TF_COMMAND=apply
     commands:
-    - set -eo pipefail
+    - set +e -xo pipefail
     # Apply the terraform plan and mask any output
     - terraform apply | tfmask | tee apply.txt
     - export TF_EXIT_CODE=$?
     # Comment back on github with outcome
     - github-commenter < apply.txt  
+    # Expect an exit code of zero
+    - '[ $TF_EXIT_CODE -eq 0 ]'
 
   cleanup:
     title: Cleanup
