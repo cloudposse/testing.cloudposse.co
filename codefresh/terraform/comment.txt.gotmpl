@@ -1,10 +1,12 @@
-## Terraform {{ env "banner" | upper }} [![Codefresh Build Status](https://g.codefresh.io/api/badges/build?repoOwner={{ env "CF_REPO_OWNER" }}&repoName={{ env "CF_REPO_NAME" }}&branch={{ env "CF_BRANCH" | default "master" }}&pipelineName={{ env "CF_PIPELINE_NAME" | default "terraform" }}&accountName={{ env "CF_ACCOUNT" }}&type=cf-1)](https://g.codefresh.io/builds?filter=repoName:{{ env "CF_REPO_NAME" }};branch:{{ env "CF_BRANCH" }})
-
+{{ if env "CF_EXIT_CODE" | eq "0" }}
+## Terraform {{ env "TF_COMMAND" | upper }} [![Codefresh Build Status](https://img.shields.io/badge/{{ env "TF_COMMAND" | default "unknown" }}-success-success.svg)](https://g.codefresh.io/builds?filter=repoName:{{ env "CF_REPO_NAME" }};branch:{{ env "CF_BRANCH" }})
+{{ else }}
+## Terraform {{ env "TF_COMMAND" | upper }} [![Codefresh Build Status](https://img.shields.io/badge/{{ env "TF_COMMAND" | default "unknown" }}-failure-critical.svg)](https://g.codefresh.io/builds?filter=repoName:{{ env "CF_REPO_NAME" }};branch:{{ env "CF_BRANCH" }})
+{{ end }}
 <details>
   <summary>View output</summary>
-  <pre>{{regexReplaceAllLiteral `\\n` . `<br>` }}<pre>
+
+```
+{{ regexReplaceAllLiteral "\\n" ( regexReplaceAllLiteral "^\\s+|\\s+$" . "" ) "<br>" }}
+```
 </details>
-
-
-
- 

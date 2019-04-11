@@ -84,6 +84,8 @@ steps:
     fail_fast: true
     image: ${{build_image}}
     working_directory: *cwd
+    environment:
+    - TF_COMMAND=init
     commands:
     # Export environment from chamber to shell
     - eval "$(chamber exec atlantis -- sh -c "export -p")"
@@ -99,11 +101,12 @@ steps:
     image: ${{build_image}}
     working_directory: *cwd
     environment:
-    - BANNER=plan
+    - TF_COMMAND=plan
     commands:
     - set -eo pipefail
     # Obtain a terraform plan and mask any secrets
     - terraform plan | tfmask > plan.txt
+    - cf_export CF_EXIT_CODE=$?
     # Output a simplified & colorized terraform plan 
     - scenery < plan.txt
     # Format plan for GitHub (without color)
@@ -123,11 +126,12 @@ steps:
     image: ${{build_image}}
     working_directory: *cwd
     environment:
-    - BANNER=apply
+    - TF_COMMAND=apply
     commands:
     - set -eo pipefail
     # Apply the terraform plan and mask any output
     - terraform apply | tfmask | tee apply.txt
+    - cf_export CF_EXIT_CODE=$?
     # Comment back on github with outcome
     - github-commenter < apply.txt  
 
