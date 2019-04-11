@@ -26,4 +26,8 @@
 {{ if or (env "TF_EXIT_CODE" | eq "0") (env "TF_EXIT_CODE" | eq "2") }}
 ### [:thumbsup:](https://g.codefresh.io/api/workflow/{{ env "CF_BUILD_ID" }}/pending-approval/approve?redirect)[:thumbsdown:](https://g.codefresh.io/api/workflow/{{ env "CF_BUILD_ID" }}/pending-approval/deny?redirect)
 {{ end }}
+{{ else if env "TF_COMMAND" | eq "apply" }}
+{{ if or (env "TF_EXIT_CODE" | eq "0") }}
+![Ready to Merge](https://random-d.uk/api/randomimg?type=gif)
+{{ end }}
 {{ end }}
