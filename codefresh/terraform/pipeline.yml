@@ -97,7 +97,7 @@ steps:
   plan:
     title: Run `terraform plan`
     stage: Plan
-    fail_fast: false
+    fail_fast: true
     image: ${{build_image}}
     working_directory: *cwd
     environment:
@@ -120,7 +120,7 @@ steps:
   apply:
     title: Run `terraform apply`
     stage: Apply
-    fail_fast: false
+    fail_fast: true
     image: ${{build_image}}
     working_directory: *cwd
     environment:
