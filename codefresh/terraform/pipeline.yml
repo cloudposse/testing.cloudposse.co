@@ -107,7 +107,7 @@ steps:
     - set -eo pipefail
     # Obtain a terraform plan and mask any secrets
     - terraform plan | tfmask > plan.txt
-    - cf_export TF_EXIT_CODE=$?
+    - export TF_EXIT_CODE=$?
     # Output a simplified & colorized terraform plan 
     - scenery < plan.txt
     # Format plan for GitHub (without color)
@@ -132,7 +132,7 @@ steps:
     - set -eo pipefail
     # Apply the terraform plan and mask any output
     - terraform apply | tfmask | tee apply.txt
-    - cf_export TF_EXIT_CODE=$?
+    - export TF_EXIT_CODE=$?
     # Comment back on github with outcome
     - github-commenter < apply.txt  
 
