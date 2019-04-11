@@ -104,15 +104,11 @@ steps:
     - TF_COMMAND=plan
     commands:
     - set -eo pipefail
-    # Obtain a terraform plan and mask any secrets
-    - terraform plan | tfmask > plan.txt
+    # Obtain a terraform plan, mask any secrets, and format it
+    - terraform plan | tfmask | scenery | tee plan.txt
     - export TF_EXIT_CODE=$?
-    # Output a simplified & colorized terraform plan 
-    - scenery < plan.txt
-    # Format plan for GitHub (without color)
-    - scenery --no-color < plan.txt > comment.txt
     # Comment back to PR with plan output
-    - github-commenter < comment.txt
+    - github-commenter < plan.txt
 
   approve:
     type: pending-approval
