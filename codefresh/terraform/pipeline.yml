@@ -31,8 +31,7 @@ steps:
     image: alpine
     description: "Cancel any builds pending-approval"
     commands:
-    - | codefresh get builds --pipeline-name=${{CF_ACCOUNT}}/${{CF_ACCOUNT}}/${{CF_PIPELINE_NAME}} -o json | \
-        jq -r '.[] | select (.status|test("pending-approval")) | .id' | xargs -n 1 codefresh terminate
+    - codefresh get builds --pipeline-name=${{CF_ACCOUNT}}/${{CF_ACCOUNT}}/${{CF_PIPELINE_NAME}} -o json | jq -r '.[] | select (.status|test("pending-approval")) | .id' | xargs -n 1 codefresh terminate
     
   build_image:
     title: Build image
