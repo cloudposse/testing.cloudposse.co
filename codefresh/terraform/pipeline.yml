@@ -110,7 +110,7 @@ steps:
     # Comment back to PR with plan output
     - github-commenter < plan.txt
     # Terraform exit code of 0 or 2 is success; 1 is error
-    - exit [ $TF_EXIT_CODE -ne 1 ]
+    - [ $TF_EXIT_CODE -ne 1 ]
 
   approve:
     type: pending-approval
@@ -132,8 +132,8 @@ steps:
     - export TF_EXIT_CODE=$?
     # Comment back on github with outcome
     - github-commenter < apply.txt  
-    # Exit the step based on outcome of terraform apply
-    - exit $TF_EXIT_CODE
+    # Expect an exit code of zero
+    - [ $TF_EXIT_CODE -eq 0 ]
 
   cleanup:
     title: Cleanup
