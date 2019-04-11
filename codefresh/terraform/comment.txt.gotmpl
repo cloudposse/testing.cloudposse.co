@@ -1,4 +1,4 @@
-{{ if env "CF_EXIT_CODE" | eq "0" }}
+{{ if env "TF_EXIT_CODE" | eq "0" }}
 ## Terraform {{ env "TF_COMMAND" | title }} [![Codefresh Build Status](https://img.shields.io/badge/{{ env "TF_COMMAND" | default "unknown" }}-success-success.svg)](https://g.codefresh.io/build/{{ env "CF_BUILD_ID" }})
 {{ else if env "CF_EXIT_CODE" | eq "2" }}
 ## Terraform {{ env "TF_COMMAND" | title }} [![Codefresh Build Status](https://img.shields.io/badge/{{ env "TF_COMMAND" | default "unknown" }}-no_changes-success.svg)](https://g.codefresh.io/build/{{ env "CF_BUILD_ID" }})
@@ -11,4 +11,5 @@
 ```
 {{ . | trim }}
 ```
+**Exit Code:** ({{ env "TF_EXIT_CODE" | default "?" }})
 </details>
