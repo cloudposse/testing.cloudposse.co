@@ -40,7 +40,7 @@ steps:
     description: "Cancel any builds pending-approval"
     commands:
     - apk add codefresh@cloudposse
-    - codefresh get builds --pipeline-name=${{CF_ACCOUNT}}/${{CF_ACCOUNT}}/${{CF_PIPELINE_NAME}} -o json | jq -r '.[] | select (.status|test("pending-approval")) | .id' | xargs -n 1 codefresh terminate
+    - codefresh get builds --pipeline-name=${{CF_ACCOUNT}}/${{CF_ACCOUNT}}/${{CF_PIPELINE_NAME}} -o json | jq -r '.[] | select (.status|test("pending-approval")) | .id' | xargs --on-run-if-empty -n 1 codefresh terminate
      
   env:
     title: Setup Environment
