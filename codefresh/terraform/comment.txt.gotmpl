@@ -13,8 +13,11 @@
 ## Terraform {{ env "TF_COMMAND" | title }} [![Codefresh Build Status](https://img.shields.io/badge/{{ env "TF_COMMAND" | default "unknown" }}-failure-critical.svg)](https://g.codefresh.io/build/{{ env "CF_BUILD_ID" }})
 {{ end }}
 {{ end }}
+
+Ran `terraform {{ env "TF_COMMAND" }}` in `{{ env "PROJECT" }}`.
+
 <details>
-  <summary>View output</summary>
+  <summary>Show Output</summary>
 
 ```
 {{ . | trim }}
