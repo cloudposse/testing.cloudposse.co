@@ -54,6 +54,7 @@ steps:
     - cf_export TF_INPUT=false
     
     # Terraform plan state file
+    - cf_export TF_CLI_PLAN_DETAILED_EXITCODE=true
     - cf_export TF_CLI_PLAN_OUT=${{CF_VOLUME_PATH}}/terraform/plan.out
     - cf_export TF_CLI_APPLY=${{CF_VOLUME_PATH}}/terraform/plan.out
    
