@@ -14,12 +14,12 @@ provider "aws" {
   }
 }
 
-
 resource "aws_s3_bucket" "default" {
+  count  = "0"
   bucket = "codefresh-gitops-example"
   acl    = "private"
 
   tags = {
-    Name        = "Codefresh GitOps Example"
+    Name = "Codefresh GitOps Example"
   }
 }
