@@ -21,3 +21,9 @@
 ```
 **Exit Code:** ({{ env "TF_EXIT_CODE" | default "?" }})
 </details>
+
+{{ if env "TF_COMMAND" | eq "plan" }}
+{{ if or (env "TF_EXIT_CODE" | eq "0") (env "TF_EXIT_CODE" | eq "2") }}
+### [:thumbsup:](https://g.codefresh.io/api/workflow/{{ env "CF_BUILD_ID" }}/pending-approval/approve?redirect)[:thumbsdown:](https://g.codefresh.io/api/workflow/{{ env "CF_BUILD_ID" }}/pending-approval/deny?redirect)
+{{ end }}
+{{ end }}
