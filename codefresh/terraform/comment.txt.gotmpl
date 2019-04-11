@@ -1,7 +1,7 @@
 {{ if env "CF_EXIT_CODE" | eq "0" }}
-## Terraform {{ env "TF_COMMAND" | upper }} [![Codefresh Build Status](https://img.shields.io/badge/{{ env "TF_COMMAND" | default "unknown" }}-success-success.svg)](https://g.codefresh.io/builds?filter=repoName:{{ env "CF_REPO_NAME" }};branch:{{ env "CF_BRANCH" }})
+## Terraform {{ env "TF_COMMAND" | upper }} [![Codefresh Build Status](https://img.shields.io/badge/{{ env "TF_COMMAND" | default "unknown" }}-success-success.svg)](https://g.codefresh.io/build/{{ env "CF_BUILD_ID }})
 {{ else }}
-## Terraform {{ env "TF_COMMAND" | upper }} [![Codefresh Build Status](https://img.shields.io/badge/{{ env "TF_COMMAND" | default "unknown" }}-failure-critical.svg)](https://g.codefresh.io/builds?filter=repoName:{{ env "CF_REPO_NAME" }};branch:{{ env "CF_BRANCH" }})
+## Terraform {{ env "TF_COMMAND" | upper }} [![Codefresh Build Status](https://img.shields.io/badge/{{ env "TF_COMMAND" | default "unknown" }}-failure-critical.svg)](https://g.codefresh.io/build/{{ env "CF_BUILD_ID" }})
 {{ end }}
 <details>
   <summary>View output</summary>
