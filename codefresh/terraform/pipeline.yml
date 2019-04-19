@@ -1,0 +1,154 @@
+# Codefresh pipeline for Terraform GitOps using the Geodesic Cloud Automation Shell
+# - https://github.com/cloudposse/geodesic
+# - https://codefresh.io
+# - https://terraform.io
+#
+version: '1.0'
+
+# Next steps
+# 2. "Solve" ssh agent problem
+# 4. Slack notification (nice to have)
+
+stages:
+- Prepare
+- Init
+- Plan
+- Apply
+
+steps:
+  main_clone:
+    title: "Clone repository"
+    type: git-clone
+    stage: Prepare
+    description: "Initialize"
+    repo: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
+    git: CF-default
+    revision: ${{CF_REVISION}}
+   
+  build_image:
+    title: Build image
+    stage: Prepare
+    type: build
+    description: Build geodesic cloud automation shell
+    image_name: ${{CF_REPO_NAME}}
+    dockerfile: Dockerfile
+
+  cancel:
+    title: "Cancel Builds"
+    stage: Prepare
+    image: ${{build_image}}
+    description: "Cancel any builds stuck in pending-approval status"
+    commands:
+    - apk add codefresh@cloudposse
+    - codefresh get builds --pipeline-name=${{CF_ACCOUNT}}/${{CF_ACCOUNT}}/${{CF_PIPELINE_NAME}} -o json | jq -r '.[] | select (.status|test("pending-approval")) | .id' | xargs -r -n 1 codefresh terminate
+     
+  env:
+    title: Setup Environment
+    stage: Init
+    fail_fast: true
+    image: ${{build_image}}
+    working_directory: &cwd ${{main_clone}}/${{PROJECT}}
+    commands: 
+    - cf_export BUILD_HARNESS_VERSION=0.18.0
+
+    # Github Commenter
+    - cf_export GITHUB_OWNER=${{CF_REPO_OWNER}}
+    - cf_export GITHUB_REPO=${{CF_REPO_NAME}}
+    - cf_export GITHUB_COMMENT_TYPE=pr
+    - cf_export GITHUB_PR_ISSUE_NUMBER=${{CF_PULL_REQUEST_NUMBER}}
+    - cf_export GITHUB_COMMENT_FORMAT_FILE=${{CF_VOLUME_PATH}}/${{CF_REPO_NAME}}/codefresh/terraform/comment.txt.gotmpl
+    
+    # Terraform settings
+    - cf_export TF_INPUT=false
+    
+    # Terraform plan state file
+    - cf_export TF_CLI_PLAN_DETAILED_EXITCODE=true
+    - cf_export TF_CLI_PLAN_OUT=${{CF_VOLUME_PATH}}/terraform/plan.out
+    - cf_export TF_CLI_APPLY=${{CF_VOLUME_PATH}}/terraform/plan.out
+   
+    # Auto approve apply
+    - cf_export TF_CLI_APPLY_AUTO_APPROVE=true
+
+    # Cache the terraform providers in the shared volume to speed up builds
+    - cf_export TF_PLUGIN_CACHE_DIR=${{CF_VOLUME_PATH}}/terraform
+
+  direnv:
+    title: "Import direnv environment"
+    description: "Run direnv to setup the environment with `cf_export` https://direnv.net"
+    stage: Init
+    fail_fast: true
+    image: ${{build_image}}
+    working_directory: *cwd
+    environment:
+    - AWS_ASSUME_ROLE_ARN=arn:aws:iam::126450723953:role/OrganizationAccountAccessRole
+    # Whitelist of envs to export to terraform
+    - TFENV_BLACKLIST=(SECRET|KEY|SESSION|TOKEN|PASSWORD)
+    - TFENV_WHITELIST=.*
+    commands:
+    - source /etc/direnv/codefresh
+        
+  init:
+    title: Run `terraform init`
+    stage: Init
+    fail_fast: true
+    image: ${{build_image}}
+    working_directory: *cwd
+    environment:
+    - TF_COMMAND=init
+    commands:
+    # Export environment from chamber to shell
+    - eval "$(chamber exec atlantis -- sh -c "export -p")"
+    - eval "$(ssh-agent)"
+    # Load SSH key so we can pull private repos
+    - echo "${ATLANTIS_SSH_PRIVATE_KEY}" | ssh-add -
+    - terraform init
+
+  plan:
+    title: Run `terraform plan`
+    stage: Plan
+    fail_fast: true
+    image: ${{build_image}}
+    working_directory: *cwd
+    environment:
+    - TF_COMMAND=plan
+    commands:
+    - set +e -xo pipefail
+    # Obtain a terraform plan, mask any secrets, and format it
+    - terraform plan | tfmask | scenery | tee plan.txt
+    - export TF_EXIT_CODE=$?
+    # Comment back to PR with plan output
+    - github-commenter < plan.txt
+    # Terraform exit code of 0 or 2 is success; 1 is error
+    - '[ $TF_EXIT_CODE -ne 1 ]'
+
+  approve:
+    type: pending-approval
+    stage: Apply
+    title: Apply changes?
+
+  apply:
+    title: Run `terraform apply`
+    stage: Apply
+    fail_fast: true
+    image: ${{build_image}}
+    working_directory: *cwd
+    environment:
+    - TF_COMMAND=apply
+    commands:
+    - set +e -xo pipefail
+    # Apply the terraform plan and mask any output
+    - terraform apply | tfmask | tee apply.txt
+    - export TF_EXIT_CODE=$?
+    # Comment back on github with outcome
+    - github-commenter < apply.txt  
+    # Expect an exit code of zero
+    - '[ $TF_EXIT_CODE -eq 0 ]'
+
+  cleanup:
+    title: Cleanup
+    stage: Apply
+    image: ${{build_image}}
+    working_directory: *cwd
+    commands:
+    - rm -f plan.out plan.txt apply.txt
+

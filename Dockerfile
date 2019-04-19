@@ -1,6 +1,6 @@
 FROM cloudposse/helmfiles:0.8.6 as helmfiles
 
-FROM cloudposse/geodesic:0.74.1
+FROM cloudposse/geodesic:0.92.0
 
 ENV DOCKER_IMAGE="cloudposse/testing.cloudposse.co"
 ENV DOCKER_TAG="latest"
@@ -28,6 +28,7 @@ ENV AWS_ROOT_ACCOUNT_ID="323330167063"
 ENV CHAMBER_KMS_KEY_ALIAS="alias/${NAMESPACE}-${STAGE}-chamber"
 
 # Terraform State Bucket
+ENV TF_BUCKET_PREFIX_FORMAT="basename-pwd"
 ENV TF_BUCKET_REGION="${AWS_REGION}"
 ENV TF_BUCKET="${NAMESPACE}-${STAGE}-terraform-state"
 ENV TF_DYNAMODB_TABLE="${NAMESPACE}-${STAGE}-terraform-state-lock"
@@ -42,9 +43,6 @@ COPY --from=helmfiles /scripts/ /conf/scripts/
 
 # Place configuration in 'conf/' directory
 COPY conf/ /conf/
-
-# Install configuration dependencies
-RUN make -C /conf install
 
 # Filesystem entry for tfstate
 RUN s3 fstab '${TF_BUCKET}' '/' '/secrets/tf'
