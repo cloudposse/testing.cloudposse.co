@@ -1,6 +1,6 @@
 FROM cloudposse/helmfiles:0.8.6 as helmfiles
 
-FROM cloudposse/geodesic:0.92.0
+FROM cloudposse/geodesic:0.114.0
 
 ENV DOCKER_IMAGE="cloudposse/testing.cloudposse.co"
 ENV DOCKER_TAG="latest"
@@ -36,6 +36,12 @@ ENV TF_DYNAMODB_TABLE="${NAMESPACE}-${STAGE}-terraform-state-lock"
 # Default AWS Profile name
 ENV AWS_DEFAULT_PROFILE="${NAMESPACE}-${STAGE}-admin"
 ENV AWS_MFA_PROFILE="${NAMESPACE}-root-admin"
+
+# Install terraform 0.11 for backwards compatibility
+RUN apk add terraform_0.11@cloudposse terraform_0.12@cloudposse terraform@cloudposse==0.11.14-r0
+
+# Pin helm to 2.14 for stability
+RUN apk add helm@cloudposse==2.14.0-r0
 
 # Copy helmfiles
 COPY --from=helmfiles /helmfile.d/ /conf/helmfile.d/
