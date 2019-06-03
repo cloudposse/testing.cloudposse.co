@@ -28,5 +28,5 @@ steps:
     stage: Push
     type: push
     candidate: ${{build_image}}
-    tags:
+    tags    :
     - "${{CF_REVISION}}"
