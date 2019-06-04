@@ -18,7 +18,7 @@ steps:
     stage: "Promote"
     image: "${{CF_DOCKER_REPO_URL}}/${{CF_REPO_NAME}}:${{CF_REVISION}}"
     retry:
-      maxAttempts: 40
+      maxAttempts: 10
       delay: 15
       exponentialFactor: 1
     commands:
