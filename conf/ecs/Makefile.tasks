@@ -9,4 +9,6 @@ reset:
 ## Coldstart setup
 coldstart:
 	terraform apply -target module.dns
+	terraform apply -target module.acm
+	terraform apply -target module.alb
 	terraform apply

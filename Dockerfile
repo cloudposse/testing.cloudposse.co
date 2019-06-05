@@ -70,7 +70,7 @@ ENV NODE_MIN_SIZE="4"
 COPY rootfs/ /
 
 # Install atlantis
-RUN curl -fsSL -o /usr/bin/atlantis https://github.com/cloudposse/atlantis/releases/download/0.5.2/atlantis_linux_amd64 && \
+RUN curl -fsSL -o /usr/bin/atlantis https://github.com/cloudposse/atlantis/releases/download/0.8.0/atlantis_linux_amd64 && \
     chmod 755 /usr/bin/atlantis
 
 WORKDIR /conf/
