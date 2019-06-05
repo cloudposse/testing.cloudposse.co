@@ -20,8 +20,6 @@ atlantis_repo_owner = "cloudposse"
 
 atlantis_repo_whitelist = ["github.com/cloudposse/testing.cloudposse.co"]
 
-atlantis_allow_repo_config = "true"
-
 atlantis_repo_config = "/conf/ecs/atlantis-repo-config.yaml"
 
 atlantis_gh_user = "cloudpossebot"
