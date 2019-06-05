@@ -28,15 +28,7 @@ atlantis_gh_user = "cloudpossebot"
 
 atlantis_gh_team_whitelist = "cloudposse:*,engineering:*"
 
-atlantis_authentication_type = "OIDC"
-
-atlantis_oidc_issuer = "https://accounts.google.com"
-
-atlantis_oidc_authorization_endpoint = "https://accounts.google.com/o/oauth2/v2/auth"
-
-atlantis_oidc_token_endpoint = "https://oauth2.googleapis.com/token"
-
-atlantis_oidc_user_info_endpoint = "https://openidconnect.googleapis.com/v1/userinfo"
+atlantis_authentication_type = ""
 
 atlantis_alb_ingress_unauthenticated_paths = ["/events"]
 
