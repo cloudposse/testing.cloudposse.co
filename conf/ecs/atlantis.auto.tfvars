@@ -28,13 +28,9 @@ atlantis_gh_team_whitelist = "cloudposse:*,engineering:*"
 
 atlantis_authentication_type = ""
 
-atlantis_alb_ingress_unauthenticated_paths = ["/events"]
+atlantis_alb_ingress_unauthenticated_paths = ["/*"]
 
 atlantis_alb_ingress_listener_unauthenticated_priority = "50"
-
-atlantis_alb_ingress_authenticated_paths = ["/*"]
-
-atlantis_alb_ingress_listener_authenticated_priority = "100"
 
 region = "us-west-2"
 
