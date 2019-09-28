@@ -1,6 +1,6 @@
 FROM cloudposse/helmfiles:0.8.6 as helmfiles
 
-FROM cloudposse/geodesic:0.114.0
+FROM cloudposse/geodesic:0.122.4
 
 ENV DOCKER_IMAGE="cloudposse/testing.cloudposse.co"
 ENV DOCKER_TAG="latest"
@@ -17,7 +17,7 @@ ENV BANNER="testing"
 ENV MOTD_URL="https://geodesic.sh/motd"
 
 # AWS
-ENV AWS_REGION="us-west-2"
+ENV AWS_REGION="us-east-2"
 ENV REGION="${AWS_REGION}"
 ENV AWS_ACCOUNT_ID="126450723953"
 ENV ACCOUNT_ID="${AWS_ACCOUNT_ID}"
@@ -37,10 +37,14 @@ ENV AWS_DEFAULT_PROFILE="${NAMESPACE}-${STAGE}-admin"
 ENV AWS_MFA_PROFILE="${NAMESPACE}-root-admin"
 
 # Install terraform 0.11 for backwards compatibility
-RUN apk add terraform_0.11@cloudposse terraform_0.12@cloudposse terraform@cloudposse==0.11.14-r0
+RUN apk add terraform_0.11@cloudposse
+RUN apk add terraform_0.12@cloudposse terraform@cloudposse==0.12.7-r0
 
-# Pin helm to 2.14 for stability
-RUN apk add helm@cloudposse==2.14.0-r0
+# Pin helm to 2.14.3 for stability
+RUN apk add helm@cloudposse==2.14.3-r0
+
+# Pin helmfile to 0.81.0 for stability
+RUN apk update && apk add helmfile@cloudposse==0.82.0-r0
 
 # Copy helmfiles
 COPY --from=helmfiles /helmfile.d/ /conf/helmfile.d/
