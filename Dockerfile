@@ -1,6 +1,6 @@
 FROM cloudposse/helmfiles:0.8.6 as helmfiles
 
-FROM cloudposse/geodesic:0.122.4
+FROM cloudposse/geodesic:0.123.0
 
 ENV DOCKER_IMAGE="cloudposse/testing.cloudposse.co"
 ENV DOCKER_TAG="latest"
@@ -38,7 +38,7 @@ ENV AWS_MFA_PROFILE="${NAMESPACE}-root-admin"
 
 # Install terraform 0.11 for backwards compatibility
 RUN apk add terraform_0.11@cloudposse
-RUN apk add terraform_0.12@cloudposse terraform@cloudposse==0.12.7-r0
+RUN apk add terraform_0.12@cloudposse terraform@cloudposse==0.12.10-r0
 
 # Pin helm to 2.14.3 for stability
 RUN apk add helm@cloudposse==2.14.3-r0
@@ -73,7 +73,7 @@ ENV NODE_MIN_SIZE="4"
 COPY rootfs/ /
 
 # Install atlantis
-RUN curl -fsSL -o /usr/bin/atlantis https://github.com/cloudposse/atlantis/releases/download/0.8.0/atlantis_linux_amd64 && \
+RUN curl -fsSL -o /usr/bin/atlantis https://github.com/cloudposse/atlantis/releases/download/0.9.0/atlantis_linux_amd64 && \
     chmod 755 /usr/bin/atlantis
 
 WORKDIR /conf/
