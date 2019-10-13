@@ -11,7 +11,7 @@ ENV STAGE="testing"
 ENV ZONE_ID="Z3SO0TKDDQ0RGG"
 
 # Geodesic banner
-ENV BANNER="testing"
+ENV BANNER="test"
 
 # Message of the Day
 ENV MOTD_URL="https://geodesic.sh/motd"
