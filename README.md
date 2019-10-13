@@ -3,7 +3,7 @@
 
 [![Cloud Posse][logo]](https://cpco.io/homepage)
 
-# testing.cloudposse.co [![Codefresh Build Status](https://g.codefresh.io/api/badges/build?repoOwner=cloudposse&repoName=testing.cloudposse.co&branch=master&pipelineName=testing.cloudposse.co&accountName=cloudposse&type=cf-1)](https://g.codefresh.io/pipelines/testing.cloudposse.co/builds) [![Latest Release](https://img.shields.io/github/release/cloudposse/testing.cloudposse.co.svg)](https://github.com/cloudposse/testing.cloudposse.co/releases) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
+# testing.cloudposse.co [![Codefresh Build Status](https://g.codefresh.io/api/badges/build?repoOwner=cloudposse&repoName=testing.cloudposse.co&branch=master&pipelineName=build&accountName=cloudposse&type=cf-1)](https://g.codefresh.io/pipelines/build/builds?repoOwner=cloudposse&repoName=testing.cloudposse.co&serviceName=cloudposse%2Ftesting.cloudposse.co&filter=trigger:build~Build;branch:master;pipeline:5b4d6e94cb00eb3e7efb81de~build) [![Latest Release](https://img.shields.io/github/release/cloudposse/testing.cloudposse.co.svg)](https://github.com/cloudposse/testing.cloudposse.co/releases) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
 
 
 Terraform Reference Architecture that implements a [Geodesic](https://github.com/cloudposse/geodesic) Module for an Automated Testing Organization in AWS.
@@ -11,6 +11,7 @@ Terraform Reference Architecture that implements a [Geodesic](https://github.com
 This account is suitable for running automated tests of Terraform modules. 
 
 __NOTE:__ Before creating the Testing infrastructure, you need to provision the [Parent ("Root") Organization](https://github.com/cloudposse/root.cloudposse.co) in AWS (because it creates resources needed for all other accounts). Follow the steps in [README](https://github.com/cloudposse/root.cloudposse.co) first. You need to do it only once.
+
 
 ---
 

@@ -1,0 +1,34 @@
+version: '1.0'
+
+stages:
+  - Prepare
+  - Promote
+
+steps:
+  main_clone:
+    title: "Create Context"
+    stage: "Prepare"
+    image: alpine
+    commands:
+      # Extract the postfix of a semver (e.g. 0.0.0-stage => stage)
+      - cf_export STAGE=$(echo ${{CF_RELEASE_TAG}} | sed -E 's/^[^-]+-?//')
+
+  pull_image_sha:
+    title: Pull image with commit sha
+    stage: "Promote"
+    image: "${{CF_DOCKER_REPO_URL}}/${{CF_REPO_NAME}}:${{CF_REVISION}}"
+    retry:
+      maxAttempts: 10
+      delay: 15
+      exponentialFactor: 1
+    commands:
+    - "true"
+
+  push_image_tag:
+    title: Push image with release tag
+    stage: "Promote"
+    type: push
+    image_name: ${{CF_REPO_NAME}}
+    candidate: "${{CF_DOCKER_REPO_URL}}/${{CF_REPO_NAME}}:${{CF_REVISION}}"
+    tags:
+    - "${{CF_RELEASE_TAG}}"
