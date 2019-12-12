@@ -1,0 +1,9 @@
+-include ${TF_MODULE_CACHE}/Makefile
+
+deps:
+	mkdir -p ${TF_MODULE_CACHE}
+	terraform init
+
+## Reset this project
+reset:
+	rm -rf ${TF_MODULE_CACHE} .terraform

@@ -1,5 +1,3 @@
-region = "us-east-2"
-
 availability_zones = ["us-east-2a", "us-east-2b"]
 
 vpc_cidr_block = "172.16.0.0/16"
@@ -19,3 +17,5 @@ disk_size = 30
 kubeconfig_path = "/.kube/config"
 
 kubernetes_labels = {}
+
+chamber_service = "eks"
