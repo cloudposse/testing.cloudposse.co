@@ -1,0 +1,7 @@
+# Ordered list of releases.
+# Terraform-module-like URLs for importing a remote directory and use a file in it as a nested-state file.
+# The nested-state file is locally checked-out along with the remote directory containing it.
+# Therefore all the local paths in the file are resolved relative to the file.
+
+helmfiles:
+  - path: git::https://github.com/cloudposse/helmfiles.git@releases/eks/external-dns.yaml?ref=add-eks-helmfiles
