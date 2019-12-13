@@ -8,6 +8,4 @@ kubernetes_service_account_name = "external-dns"
 
 chamber_service = "eks"
 
-domain_name = "eks-test.testing.cloudposse.co"
-
 dns_zone_names = ["eks-test.testing.cloudposse.co"]

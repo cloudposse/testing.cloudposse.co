@@ -5,3 +5,6 @@
 
 helmfiles:
   - path: git::https://github.com/cloudposse/helmfiles.git@releases/eks/external-dns.yaml?ref=add-eks-helmfiles
+  - path: git::https://github.com/cloudposse/helmfiles.git@releases/heapster.yaml?ref=add-eks-helmfiles
+  - path: git::https://github.com/cloudposse/helmfiles.git@releases/dashboard.yaml?ref=add-eks-helmfiles
+  - path: git::https://github.com/cloudposse/helmfiles.git@releases/nginx-ingress.yaml?ref=add-eks-helmfiles

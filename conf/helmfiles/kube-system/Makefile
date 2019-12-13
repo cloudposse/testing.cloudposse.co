@@ -18,8 +18,8 @@ reset:
 
 ## Install or upgrade tiller.
 install-tiller upgrade-tiller: kubeconfig
-	helm init --override 'spec.template.metadata.annotations.cluster-autoscaler\.kubernetes\.io/safe-to-evict=true' --history-max 200 --upgrade 
+	helm init --override 'spec.template.metadata.annotations.cluster-autoscaler\.kubernetes\.io/safe-to-evict=true' --history-max 200 --upgrade
 
 .PHONY: kubeconfig
 kubeconfig:
-	chamber exec kops -- kops export kubecfg
+	exit 0
