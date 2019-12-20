@@ -19,3 +19,7 @@ kubeconfig_path = "/.kube/config"
 kubernetes_labels = {}
 
 chamber_service = "eks"
+
+cluster_kubernetes_version = "1.14"
+
+nodes_kubernetes_version = "1.14"
