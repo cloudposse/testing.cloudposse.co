@@ -56,20 +56,6 @@ enable_encryption = true
 
 enable_point_in_time_recovery = true
 
-enable_autoscaler = true
-
-autoscale_write_target = 50
-
-autoscale_read_target = 50
-
-autoscale_min_read_capacity = 5
-
-autoscale_max_read_capacity = 20
-
-autoscale_min_write_capacity = 5
-
-autoscale_max_write_capacity = 20
-
 enable_backup = true
 
 backup_kms_key_arn = ""
@@ -83,3 +69,19 @@ backup_completion_window = 70
 backup_cold_storage_after = 180
 
 backup_delete_after = 360
+
+# If billing_mode = "PAY_PER_REQUEST", autoscaling is not supported (setting `enable_autoscaler` to `true` has no effect).
+# In billing_mode = "PAY_PER_REQUEST", AWS scales the table automatically
+enable_autoscaler = false
+
+autoscale_write_target = 50
+
+autoscale_read_target = 50
+
+autoscale_min_read_capacity = 5
+
+autoscale_max_read_capacity = 20
+
+autoscale_min_write_capacity = 5
+
+autoscale_max_write_capacity = 20
