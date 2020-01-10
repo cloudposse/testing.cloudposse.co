@@ -1,5 +1,3 @@
-region = "us-east-2"
-
 name = "trader_page_stats"
 
 billing_mode = "PAY_PER_REQUEST"
