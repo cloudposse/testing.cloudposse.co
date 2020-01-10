@@ -12,28 +12,33 @@ range_key_type = "S"
 
 ttl_attribute = ""
 
-dynamodb_attributes = [
-  {
-    name = "lookup_count"
-    type = "N"
-  },
-  {
-    name = "search_count"
-    type = "N"
-  },
-  {
-    name = "external_count"
-    type = "N"
-  },
-  {
-    name = "total_count"
-    type = "N"
-  },
-  {
-    name = "site"
-    type = "N"
-  }
-]
+dynamodb_attributes = []
+
+# Specify additional attributes only if they are part of local or global secondary indexes
+# Otherwise, the error "All attributes must be indexed. Unused attributes: ..." will be thrown
+# See https://stackoverflow.com/questions/50006885/terraform-dynamodb-all-attributes-must-be-indexed
+#dynamodb_attributes = [
+#  {
+#    name = "lookup_count"
+#    type = "N"
+#  },
+#  {
+#    name = "search_count"
+#    type = "N"
+#  },
+#  {
+#    name = "external_count"
+#    type = "N"
+#  },
+#  {
+#    name = "total_count"
+#    type = "N"
+#  },
+#  {
+#    name = "site"
+#    type = "N"
+#  }
+#]
 
 global_secondary_index_map = []
 
