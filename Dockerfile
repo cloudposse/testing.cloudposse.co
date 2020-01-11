@@ -1,6 +1,4 @@
-FROM cloudposse/helmfiles:0.8.6 as helmfiles
-
-FROM cloudposse/geodesic:0.123.0
+FROM cloudposse/geodesic:0.123.1
 
 ENV DOCKER_IMAGE="cloudposse/testing.cloudposse.co"
 ENV DOCKER_TAG="latest"
@@ -44,11 +42,7 @@ RUN apk add terraform_0.12@cloudposse terraform@cloudposse==0.12.10-r0
 RUN apk add helm@cloudposse==2.14.3-r0
 
 # Pin helmfile to 0.81.0 for stability
-RUN apk update && apk add helmfile@cloudposse==0.82.0-r0
-
-# Copy helmfiles
-COPY --from=helmfiles /helmfile.d/ /conf/helmfile.d/
-COPY --from=helmfiles /scripts/ /conf/scripts/
+RUN apk update && apk add helmfile@cloudposse==0.94.1-r0
 
 # Place configuration in 'conf/' directory
 COPY conf/ /conf/
