@@ -1,4 +1,4 @@
-name = "trader_page_stats"
+name = "trader-page-stats"
 
 billing_mode = "PAY_PER_REQUEST"
 
@@ -62,9 +62,9 @@ backup_kms_key_arn = ""
 
 backup_schedule = "cron(0 12 * * ? *)"
 
-backup_start_window = 10
+backup_start_window = 60
 
-backup_completion_window = 70
+backup_completion_window = 120
 
 backup_cold_storage_after = 180
 
