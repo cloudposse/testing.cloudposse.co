@@ -1,0 +1,13 @@
+name: docker/build-and-push
+on:
+  # Open a PR to update README for all PRs (as necessary)
+  pull_request: 
+    types: [opened, synchronize, reopened]
+
+uses: docker/build-push-action@v1
+with:
+  username: ${{ github.repostitory }}
+  password: ${{ secrets.GITHUB_TOKEN }}
+  repository: docker.pkg.github.com/${{ github.repository }}
+  tag_with_ref: true
+  tag_with_sha: true
