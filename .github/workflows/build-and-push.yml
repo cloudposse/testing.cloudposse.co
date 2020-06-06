@@ -7,7 +7,7 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  build-and-push:
+  update:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -15,9 +15,9 @@ jobs:
       - name: docker/build-and-push
         uses: docker/build-push-action@v1
         with:
-          username: ${{ github.actor }}
-          password: ${{ github.token }}
-          repository: ${{ github.repository }}/default
-          registry: docker.pkg.github.com
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          repository: ${{ github.repository }}
+          registry: registry-1.docker.io
           tag_with_ref: true
           tag_with_sha: true
