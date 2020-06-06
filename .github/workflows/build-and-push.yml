@@ -1,13 +1,22 @@
-name: docker/build-and-push
+name: docker
 on:
-  # Open a PR to update README for all PRs (as necessary)
+  push:
+    branches:
+      - master
   pull_request: 
     types: [opened, synchronize, reopened]
 
-uses: docker/build-push-action@v1
-with:
-  username: ${{ github.repostitory }}
-  password: ${{ secrets.GITHUB_TOKEN }}
-  repository: docker.pkg.github.com/${{ github.repository }}
-  tag_with_ref: true
-  tag_with_sha: true
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v1
+      - name: docker/build-and-push
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ github.repostitory }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          repository: docker.pkg.github.com/${{ github.repository }}
+          tag_with_ref: true
+          tag_with_sha: true
