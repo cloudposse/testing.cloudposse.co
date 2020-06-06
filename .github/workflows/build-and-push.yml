@@ -12,12 +12,16 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v1
+      - name: get branch
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: gitref
       - name: docker/build-and-push
         uses: docker/build-push-action@v1
         with:
           username: ${{ github.actor }}
           password: ${{ github.token }}
-          repository: ${{ github.repository }}/default
+          repository: ${{ github.repository }}/${{ steps.gitref.outputs.branch }}
           registry: docker.pkg.github.com
           tag_with_ref: true
           tag_with_sha: true
