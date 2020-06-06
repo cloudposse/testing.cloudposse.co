@@ -15,7 +15,7 @@ jobs:
       - name: docker/build-and-push
         uses: docker/build-push-action@v1
         with:
-          username: ${{ github.repostitory }}
+          username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           repository: docker.pkg.github.com/${{ github.repository }}
           tag_with_ref: true
