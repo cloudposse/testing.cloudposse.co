@@ -1,9 +1,9 @@
 name: 'aws-nuke'
 
 on:
-  # Open a PR to update README for all PRs (as necessary)
-  pull_request: 
-    types: [opened, synchronize, reopened]
+  # Enable pull request for testing
+  #pull_request: 
+  #  types: [opened, synchronize, reopened]
 
   # Nuke testing account nightly
   schedule:
