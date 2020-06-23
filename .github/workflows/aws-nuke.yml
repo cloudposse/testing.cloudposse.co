@@ -1,0 +1,26 @@
+name: 'auto-readme'
+
+on:
+  # Open a PR to update README for all PRs (as necessary)
+  pull_request: 
+    types: [opened, synchronize, reopened]
+
+  # Nuke testing account nightly
+  schedule:
+    - cron:  '0 0 * * *'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v1
+      - name: aws-nuke
+        shell: bash
+        uses: docker://quay.io/rebuy/aws-nuke:v2.14.0
+        with:
+          args: "--config .github/aws-nuke.yaml --force --no-dry-run"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY_ID }}"
+          AWS_SECRET_KEY: "${{ secrets.AWS_SECRET_KEY }}"

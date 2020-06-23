@@ -1,0 +1,149 @@
+regions:
+#- us-east-1
+- us-east-2
+
+account-blacklist:
+- "999999999999" # production
+
+resource-types:
+  # only nuke these three resources
+  targets:
+  - IAMRole
+  - S3Object
+  - S3Bucket
+  - EC2Address 
+  - ElasticBeanstalkApplication
+  - ElasticBeanstalkEnvironment
+  - EC2VPC
+  - EC2Instance
+  - EC2Volume
+  - EC2Subnet
+  - EC2RouteTable
+  - EC2NATGateway
+  - EC2InternetGateway
+  - EC2InternetGatewayAttachment
+  - EC2NetworkACL
+  - EC2SecurityGroup
+  - EC2NetworkInterface
+  - ECSService
+  - ECSCluster
+  - ELBLoadBalancer
+  - ELBv2
+  - ELBv2TargetGroup
+
+  # don't nuke IAM users
+  excludes:
+  - IAMUser
+
+accounts:
+# testing account
+  126450723953:
+    presets:
+    - defaults
+    - cpco
+
+presets:
+  defaults:
+    filters:
+      ECSCluster:
+      - type: "regex"
+        value: ".*cluster/fargate"
+      ECSService:
+      - type: "regex"
+        value: ".*service/atlantis"
+      EC2InternetGateway:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^$"
+      EC2InternetGatewayAttachment:
+      - property: "tag:igw:Name"
+        type: "regex"
+        value: "^$"
+      EC2RouteTable:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^$"
+      EC2Subnet:
+      - property: "DefaultForAz"
+        value: "true"
+      EC2VPC:
+      - property: "IsDefault"
+        value: "true"
+      IAMRole:
+      - "OrganizationAccountAccessRole" 
+
+  cpco:
+    filters:
+      S3Bucket:
+      - property: "Name"
+        type: "regex"
+        value: "^cpco-.*"
+      S3Object:
+      - property: "Bucket"
+        type: "regex"
+        value: "^cpco-.*"
+      EC2VPC:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^cpco-.*"
+      EC2Volume:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^cpco-.*"
+      EC2SecurityGroup:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^cpco-.*"
+      EC2Instance:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^cpco-.*"
+      EC2NetworkInterface:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^cpco-.*"
+      EC2InternetGateway:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^cpco-.*"
+      EC2NATGateway:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^cpco-.*"
+      EC2InternetGatewayAttachment:
+      - property: "tag:igw:Name"
+        type: "regex"
+        value: "^cpco-.*"
+      EC2Subnet:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^cpco-.*"
+      EC2RouteTable:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^cpco-.*"
+      EC2NetworkACL:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^cpco-.*"
+      ECSService:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^cpco-.*"
+      ECSCluster:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^cpco-.*"
+      ELBLoadBalancer:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^cpco-.*"
+      ELBv2:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^cpco-.*"
+      ELBv2TargetGroup:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^cpco-.*"
+
