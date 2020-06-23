@@ -6,7 +6,7 @@ account-blacklist:
 - "999999999999" # production
 
 resource-types:
-  # only nuke these three resources
+  # only nuke these resources
   targets:
   - IAMRole
   - S3Object
@@ -146,4 +146,3 @@ presets:
       - property: "tag:Name"
         type: "regex"
         value: "^cpco-.*"
-
