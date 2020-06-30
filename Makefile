@@ -33,3 +33,9 @@ install:
 ## Start the geodesic shell by calling wrapper script
 run:
 	$(SCRIPT)
+
+nuke:
+	docker run -it -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -v $(CURDIR)/.github:/.github quay.io/rebuy/aws-nuke:v2.14.0 --config /.github/aws-nuke.yaml --force --no-dry-run
+
+nuke-dryrun:
+	docker run -it -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -v $(CURDIR)/.github:/.github quay.io/rebuy/aws-nuke:v2.14.0 --config /.github/aws-nuke.yaml --force

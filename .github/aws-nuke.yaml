@@ -1,6 +1,8 @@
 regions:
 #- us-east-1
 - us-east-2
+#- us-west-1
+#- us-west-2
 
 account-blacklist:
 - "999999999999" # production
@@ -30,6 +32,8 @@ resource-types:
   - ELBLoadBalancer
   - ELBv2
   - ELBv2TargetGroup
+  - LambdaFunction
+  - LambdaEventSourceMapping
 
   # don't nuke IAM users
   excludes:
@@ -71,6 +75,14 @@ presets:
         value: "true"
       IAMRole:
       - "OrganizationAccountAccessRole" 
+      EC2SecurityGroup:
+      - property: "Name"
+        type: "regex"
+        value: "^fargate-default$"
+      EC2NetworkInterface:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^$"
 
   cpco:
     filters:
@@ -91,9 +103,12 @@ presets:
         type: "regex"
         value: "^cpco-.*"
       EC2SecurityGroup:
-      - property: "tag:Name"
+      - property: "Name"
         type: "regex"
         value: "^cpco-.*"
+      - property: "tag:Name"
+        type: "regex"
+        value: "^fargate-default$"
       EC2Instance:
       - property: "tag:Name"
         type: "regex"
@@ -139,10 +154,12 @@ presets:
         type: "regex"
         value: "^cpco-.*"
       ELBv2:
-      - property: "tag:Name"
-        type: "regex"
+      - type: "regex"
         value: "^cpco-.*"
+      - type: "regex"
+        value: "^atlantis$"
       ELBv2TargetGroup:
-      - property: "tag:Name"
-        type: "regex"
+      - type: "regex"
         value: "^cpco-.*"
+      - type: "regex"
+        value: ".*atlantis.*"
