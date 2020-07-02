@@ -1,4 +1,4 @@
-FROM cloudposse/geodesic:0.123.1
+FROM cloudposse/geodesic:0.132.2
 
 ENV DOCKER_IMAGE="cloudposse/testing.cloudposse.co"
 ENV DOCKER_TAG="latest"
@@ -39,13 +39,7 @@ RUN apk add go
 
 # Install terraform 0.11 for backwards compatibility
 RUN apk add terraform_0.11@cloudposse
-RUN apk add terraform_0.12@cloudposse terraform@cloudposse==0.12.10-r0
-
-# Pin helm to 2.14.3 for stability
-RUN apk add helm@cloudposse==2.14.3-r0
-
-# Pin helmfile to 0.81.0 for stability
-RUN apk update && apk add helmfile@cloudposse==0.94.1-r0
+RUN apk add terraform_0.12@cloudposse terraform@cloudposse
 
 # Place configuration in 'conf/' directory
 COPY conf/ /conf/
