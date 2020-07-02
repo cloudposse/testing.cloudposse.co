@@ -34,6 +34,9 @@ ENV TF_DYNAMODB_TABLE="${NAMESPACE}-${STAGE}-terraform-state-lock"
 ENV AWS_DEFAULT_PROFILE="${NAMESPACE}-${STAGE}-admin"
 ENV AWS_MFA_PROFILE="${NAMESPACE}-root-admin"
 
+# Install go for running terratest
+RUN apk add go
+
 # Install terraform 0.11 for backwards compatibility
 RUN apk add terraform_0.11@cloudposse
 RUN apk add terraform_0.12@cloudposse terraform@cloudposse==0.12.10-r0
