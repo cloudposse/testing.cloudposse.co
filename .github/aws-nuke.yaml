@@ -13,6 +13,7 @@ resource-types:
   - IAMRole
   - S3Object
   - S3Bucket
+  - AutoScalingGroup
   - EC2Address 
   - ElasticBeanstalkApplication
   - ElasticBeanstalkEnvironment
@@ -29,11 +30,16 @@ resource-types:
   - EC2NetworkInterface
   - ECSService
   - ECSCluster
+  - EKSCluster
+  - EKSFargateProfile
+  - EKSNodegroups
   - ELBLoadBalancer
   - ELBv2
   - ELBv2TargetGroup
   - LambdaFunction
   - LambdaEventSourceMapping
+  - CloudformationStack
+  - RDSInstance
 
   # don't nuke IAM users
   excludes:
@@ -83,6 +89,19 @@ presets:
       - property: "tag:Name"
         type: "regex"
         value: "^$"
+      EC2Volume:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^$"
+      CloudformationStack:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^$"
+      RDSInstance:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^$"
+
 
   cpco:
     filters:
@@ -141,6 +160,10 @@ presets:
       - property: "tag:Name"
         type: "regex"
         value: "^cpco-.*"
+      AutoScalingGroup:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^cpco-.*"
       ECSService:
       - property: "tag:Name"
         type: "regex"
@@ -148,6 +171,15 @@ presets:
       ECSCluster:
       - property: "tag:Name"
         type: "regex"
+        value: "^cpco-.*"
+      EKSCluster:
+      - type: "regex"
+        value: "^cpco-.*"
+      EKSNodegroups:
+      - type: "regex"
+        value: "^cpco-.*"
+      EKSFargateProfile:
+      - type: "regex"
         value: "^cpco-.*"
       ELBLoadBalancer:
       - property: "tag:Name"
@@ -163,3 +195,11 @@ presets:
         value: "^cpco-.*"
       - type: "regex"
         value: ".*atlantis.*"
+      CloudformationStack:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^cpco-.*"
+      RDSInstance:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^cpco-.*"
