@@ -35,7 +35,7 @@ run:
 	$(SCRIPT)
 
 nuke:
-	docker run -it -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -v $(CURDIR)/.github:/.github quay.io/rebuy/aws-nuke:v2.14.0 --config /.github/aws-nuke.yaml --force --no-dry-run
+	docker run -it -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -v $(CURDIR)/.github:/.github quay.io/rebuy/aws-nuke:v2.15.0-beta.1 --config /.github/aws-nuke.yaml --force --no-dry-run
 
 nuke-dryrun:
-	docker run -it -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -v $(CURDIR)/.github:/.github quay.io/rebuy/aws-nuke:v2.14.0 --config /.github/aws-nuke.yaml --force
+	docker run -it -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -v $(CURDIR)/.github:/.github quay.io/rebuy/aws-nuke:v2.15.0-beta.1 --config /.github/aws-nuke.yaml --force --force-sleep=3
