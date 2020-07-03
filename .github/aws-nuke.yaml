@@ -14,6 +14,8 @@ resource-types:
   - IAMRole
   - IAMRolePolicyAttachment
   - IAMPolicy
+  - IAMGroup
+  - IAMGroupPolicyAttachment
   - S3Object
   - S3Bucket
   - AutoScalingGroup
@@ -31,6 +33,7 @@ resource-types:
   - EC2NetworkACL
   - EC2SecurityGroup
   - EC2NetworkInterface
+  - EC2KeyPair
   - ECSService
   - ECSCluster
   - EKSCluster
@@ -44,6 +47,7 @@ resource-types:
   - CloudformationStack
   - RDSInstance
   - CloudWatchLogsLogGroup
+  - EMRCluster
 
   # don't nuke IAM users
   excludes:
@@ -229,3 +233,15 @@ presets:
         value: "^/aws/eks/cpco-.*"
       - type: "regex"
         value: "^/aws/lambda/CIS.*"
+      EMRCluster:
+      - type: "regex"
+        value: "^cpco-.*"
+      EC2KeyPair:
+      - type: "regex"
+        value: "^cpco-.*"
+      IAMGroup:
+      - type: "regex"
+        value: "^cpco-.*"
+      IAMGroupPolicyAttachment:
+      - type: "regex"
+        value: "^cpco-.*"
