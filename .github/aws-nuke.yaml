@@ -1,4 +1,5 @@
 regions:
+- global
 #- us-east-1
 - us-east-2
 #- us-west-1
@@ -11,6 +12,8 @@ resource-types:
   # only nuke these resources
   targets:
   - IAMRole
+  - IAMRolePolicyAttachment
+  - IAMPolicy
   - S3Object
   - S3Bucket
   - AutoScalingGroup
@@ -40,6 +43,7 @@ resource-types:
   - LambdaEventSourceMapping
   - CloudformationStack
   - RDSInstance
+  - CloudWatchLogsLogGroup
 
   # don't nuke IAM users
   excludes:
@@ -203,3 +207,25 @@ presets:
       - property: "tag:Name"
         type: "regex"
         value: "^cpco-.*"
+      IAMRole:
+      - type: "regex"
+        value: "^cpco-.*"
+      - type: "regex"
+        value: "^atlantis"
+      IAMPolicy:
+      - type: "regex"
+        value: "^arn:aws:iam::[0-9]+:policy/cpco-.*"
+      - type: "regex"
+        value: "^arn:aws:iam::[0-9]+:policy/service-role/cpco-.*"
+      - type: "regex"
+        value: "^arn:aws:iam::[0-9]+:policy/atlantis.*"
+      IAMRolePolicyAttachment:
+      - type: "regex"
+        value: "^cpco-.*"
+      - type: "regex"
+        value: "^atlantis.*"
+      CloudWatchLogsLogGroup:
+      - type: "regex"
+        value: "^/aws/eks/cpco-.*"
+      - type: "regex"
+        value: "^/aws/lambda/CIS.*"
