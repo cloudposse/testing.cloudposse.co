@@ -176,12 +176,10 @@ presets:
       - type: "regex"
         value: "^cpco-.*"
       EKSNodegroups:
-      - property: "tag:Name"
-        type: "regex"
+      - type: "regex"
         value: "^cpco-.*"
       EKSFargateProfile:
-      - property: "tag:Name"
-        type: "regex"
+      - type: "regex"
         value: "^cpco-.*"
       ELBLoadBalancer:
       - property: "tag:Name"
