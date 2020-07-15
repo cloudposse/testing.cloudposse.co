@@ -252,9 +252,6 @@ presets:
         - type: "exact"
           value: "testing.cloudposse.co."
           property: "Name"
-        - type: "regex"
-          value: "testing.cloudposse.co."
-          property: "Type"
       Route53HostedZone:
         - type: "exact"
           value: "testing.cloudposse.co."
