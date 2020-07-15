@@ -1,252 +1,260 @@
 regions:
-- global
-#- us-east-1
-- us-east-2
-#- us-west-1
-#- us-west-2
+  - global
+  #- us-east-1
+  - us-east-2
+  #- us-west-1
+  #- us-west-2
 
 account-blacklist:
-- "999999999999" # production
+  - "999999999999" # production
 
 resource-types:
   # only nuke these resources
   targets:
-  - IAMRole
-  - IAMRolePolicyAttachment
-  - IAMPolicy
-  - IAMGroup
-  - IAMGroupPolicyAttachment
-  - S3Object
-  - S3Bucket
-  - AutoScalingGroup
-  - EC2Address 
-  - ElasticBeanstalkApplication
-  - ElasticBeanstalkEnvironment
-  - EC2VPC
-  - EC2Instance
-  - EC2Volume
-  - EC2Subnet
-  - EC2RouteTable
-  - EC2NATGateway
-  - EC2InternetGateway
-  - EC2InternetGatewayAttachment
-  - EC2NetworkACL
-  - EC2SecurityGroup
-  - EC2NetworkInterface
-  - EC2KeyPair
-  - ECSService
-  - ECSCluster
-  - EKSCluster
-  - EKSFargateProfile
-  - EKSNodegroups
-  - ELBLoadBalancer
-  - ELBv2
-  - ELBv2TargetGroup
-  - LambdaFunction
-  - LambdaEventSourceMapping
-  - CloudformationStack
-  - RDSInstance
-  - CloudWatchLogsLogGroup
-  - EMRCluster
-  - Route53HostedZone
-  - ESDomain
+    - IAMRole
+    - IAMRolePolicyAttachment
+    - IAMPolicy
+    - IAMGroup
+    - IAMGroupPolicyAttachment
+    - S3Object
+    - S3Bucket
+    - AutoScalingGroup
+    - EC2Address
+    - ElasticBeanstalkApplication
+    - ElasticBeanstalkEnvironment
+    - EC2VPC
+    - EC2Instance
+    - EC2Volume
+    - EC2Subnet
+    - EC2RouteTable
+    - EC2NATGateway
+    - EC2InternetGateway
+    - EC2InternetGatewayAttachment
+    - EC2NetworkACL
+    - EC2SecurityGroup
+    - EC2NetworkInterface
+    - EC2KeyPair
+    - ECSService
+    - ECSCluster
+    - EKSCluster
+    - EKSFargateProfile
+    - EKSNodegroups
+    - ELBLoadBalancer
+    - ELBv2
+    - ELBv2TargetGroup
+    - LambdaFunction
+    - LambdaEventSourceMapping
+    - CloudformationStack
+    - RDSInstance
+    - CloudWatchLogsLogGroup
+    - EMRCluster
+    - Route53ResourceRecordSet
+    - Route53HostedZone
+    - ESDomain
 
   # don't nuke IAM users
   excludes:
-  - IAMUser
+    - IAMUser
 
 accounts:
-# testing account
+  # testing account
   126450723953:
     presets:
-    - defaults
-    - cpco
+      - defaults
+      - cpco
 
 presets:
   defaults:
     filters:
       ECSCluster:
-      - type: "regex"
-        value: ".*cluster/fargate"
+        - type: "regex"
+          value: ".*cluster/fargate"
       ECSService:
-      - type: "regex"
-        value: ".*service/atlantis"
+        - type: "regex"
+          value: ".*service/atlantis"
       EC2InternetGateway:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^$"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^$"
       EC2InternetGatewayAttachment:
-      - property: "tag:igw:Name"
-        type: "regex"
-        value: "^$"
+        - property: "tag:igw:Name"
+          type: "regex"
+          value: "^$"
       EC2RouteTable:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^$"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^$"
       EC2Subnet:
-      - property: "DefaultForAz"
-        value: "true"
+        - property: "DefaultForAz"
+          value: "true"
       EC2VPC:
-      - property: "IsDefault"
-        value: "true"
+        - property: "IsDefault"
+          value: "true"
       IAMRole:
-      - "OrganizationAccountAccessRole" 
+        - "OrganizationAccountAccessRole"
       EC2SecurityGroup:
-      - property: "Name"
-        type: "regex"
-        value: "^fargate-default$"
+        - property: "Name"
+          type: "regex"
+          value: "^fargate-default$"
       EC2NetworkInterface:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^$"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^$"
       EC2Volume:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^$"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^$"
       CloudformationStack:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^$"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^$"
       RDSInstance:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^$"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^$"
 
 
   cpco:
     filters:
       S3Bucket:
-      - property: "Name"
-        type: "regex"
-        value: "^cpco-.*"
+        - property: "Name"
+          type: "regex"
+          value: "^cpco-.*"
       S3Object:
-      - property: "Bucket"
-        type: "regex"
-        value: "^cpco-.*"
+        - property: "Bucket"
+          type: "regex"
+          value: "^cpco-.*"
       EC2VPC:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^cpco-.*"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
       EC2Volume:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^cpco-.*"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
       EC2SecurityGroup:
-      - property: "Name"
-        type: "regex"
-        value: "^cpco-.*"
-      - property: "tag:Name"
-        type: "regex"
-        value: "^fargate-default$"
+        - property: "Name"
+          type: "regex"
+          value: "^cpco-.*"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^fargate-default$"
       EC2Instance:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^cpco-.*"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
       EC2NetworkInterface:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^cpco-.*"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
       EC2InternetGateway:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^cpco-.*"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
       EC2NATGateway:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^cpco-.*"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
       EC2InternetGatewayAttachment:
-      - property: "tag:igw:Name"
-        type: "regex"
-        value: "^cpco-.*"
+        - property: "tag:igw:Name"
+          type: "regex"
+          value: "^cpco-.*"
       EC2Subnet:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^cpco-.*"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
       EC2RouteTable:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^cpco-.*"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
       EC2NetworkACL:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^cpco-.*"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
       AutoScalingGroup:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^cpco-.*"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
       ECSService:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^cpco-.*"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
       ECSCluster:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^cpco-.*"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
       EKSCluster:
-      - type: "regex"
-        value: "^cpco-.*"
+        - type: "regex"
+          value: "^cpco-.*"
       EKSNodegroups:
-      - type: "regex"
-        value: "^cpco-.*"
+        - type: "regex"
+          value: "^cpco-.*"
       EKSFargateProfile:
-      - type: "regex"
-        value: "^cpco-.*"
+        - type: "regex"
+          value: "^cpco-.*"
       ELBLoadBalancer:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^cpco-.*"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
       ELBv2:
-      - type: "regex"
-        value: "^cpco-.*"
-      - type: "regex"
-        value: "^atlantis$"
+        - type: "regex"
+          value: "^cpco-.*"
+        - type: "regex"
+          value: "^atlantis$"
       ELBv2TargetGroup:
-      - type: "regex"
-        value: "^cpco-.*"
-      - type: "regex"
-        value: ".*atlantis.*"
+        - type: "regex"
+          value: "^cpco-.*"
+        - type: "regex"
+          value: ".*atlantis.*"
       CloudformationStack:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^cpco-.*"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
       RDSInstance:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^cpco-.*"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
       IAMRole:
-      - type: "regex"
-        value: "^cpco-.*"
-      - type: "regex"
-        value: "^atlantis"
+        - type: "regex"
+          value: "^cpco-.*"
+        - type: "regex"
+          value: "^atlantis"
       IAMPolicy:
-      - type: "regex"
-        value: "^arn:aws:iam::[0-9]+:policy/cpco-.*"
-      - type: "regex"
-        value: "^arn:aws:iam::[0-9]+:policy/service-role/cpco-.*"
-      - type: "regex"
-        value: "^arn:aws:iam::[0-9]+:policy/atlantis.*"
+        - type: "regex"
+          value: "^arn:aws:iam::[0-9]+:policy/cpco-.*"
+        - type: "regex"
+          value: "^arn:aws:iam::[0-9]+:policy/service-role/cpco-.*"
+        - type: "regex"
+          value: "^arn:aws:iam::[0-9]+:policy/atlantis.*"
       IAMRolePolicyAttachment:
-      - type: "regex"
-        value: "^cpco-.*"
-      - type: "regex"
-        value: "^atlantis.*"
+        - type: "regex"
+          value: "^cpco-.*"
+        - type: "regex"
+          value: "^atlantis.*"
       CloudWatchLogsLogGroup:
-      - type: "regex"
-        value: "^/aws/eks/cpco-.*"
-      - type: "regex"
-        value: "^/aws/lambda/CIS.*"
+        - type: "regex"
+          value: "^/aws/eks/cpco-.*"
+        - type: "regex"
+          value: "^/aws/lambda/CIS.*"
       EMRCluster:
-      - type: "regex"
-        value: "^cpco-.*"
+        - type: "regex"
+          value: "^cpco-.*"
       EC2KeyPair:
-      - type: "regex"
-        value: "^cpco-.*"
+        - type: "regex"
+          value: "^cpco-.*"
       IAMGroup:
-      - type: "regex"
-        value: "^cpco-.*"
+        - type: "regex"
+          value: "^cpco-.*"
       IAMGroupPolicyAttachment:
-      - type: "regex"
-        value: "^cpco-.*"
+        - type: "regex"
+          value: "^cpco-.*"
+      Route53ResourceRecordSet:
+        - type: "exact"
+          value: "testing.cloudposse.co."
+          property: "Name"
+        - type: "regex"
+          value: "testing.cloudposse.co."
+          property: "Type"
       Route53HostedZone:
-      - type: "exact"
-        value: "testing.cloudposse.co."
+        - type: "exact"
+          value: "testing.cloudposse.co."
