@@ -48,6 +48,8 @@ resource-types:
   - RDSInstance
   - CloudWatchLogsLogGroup
   - EMRCluster
+  - Route53HostedZone
+  - ESDomain
 
   # don't nuke IAM users
   excludes:
@@ -245,3 +247,6 @@ presets:
       IAMGroupPolicyAttachment:
       - type: "regex"
         value: "^cpco-.*"
+      Route53HostedZone:
+      - type: "exact"
+        value: "testing.cloudposse.co."
