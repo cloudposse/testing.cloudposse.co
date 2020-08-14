@@ -1,5 +1,6 @@
+<!-- markdownlint-disable -->
 ## Makefile Targets
-```
+```text
 Available targets:
 
   all                                 Initialize build-harness, install deps, build docker container, install wrapper script and run shell
@@ -13,3 +14,4 @@ Available targets:
   run                                 Start the geodesic shell by calling wrapper script
 
 ```
+<!-- markdownlint-restore -->
