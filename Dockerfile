@@ -38,8 +38,10 @@ ENV AWS_MFA_PROFILE="${NAMESPACE}-root-admin"
 RUN apk add go
 
 # Install terraform 0.11 for backwards compatibility
-RUN apk add terraform_0.11@cloudposse
-RUN apk add terraform_0.12@cloudposse terraform@cloudposse
+RUN apk add terraform@cloudposse \
+            terraform_0.11@cloudposse \
+            terraform_0.12@cloudposse \
+            terraform_0.13@cloudposse
 
 # Place configuration in 'conf/' directory
 COPY conf/ /conf/
