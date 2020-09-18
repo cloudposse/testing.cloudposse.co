@@ -1,4 +1,4 @@
-FROM cloudposse/geodesic:0.136.1
+FROM cloudposse/geodesic:1.120.5
 
 ENV DOCKER_IMAGE="cloudposse/testing.cloudposse.co"
 ENV DOCKER_TAG="latest"
