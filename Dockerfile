@@ -1,4 +1,4 @@
-FROM cloudposse/geodesic:0.132.2
+FROM cloudposse/geodesic:0.136.1
 
 ENV DOCKER_IMAGE="cloudposse/testing.cloudposse.co"
 ENV DOCKER_TAG="latest"
@@ -39,9 +39,9 @@ RUN apk add go
 
 # Install terraform 0.11 for backwards compatibility
 RUN apk add terraform@cloudposse \
-            terraform_0.11@cloudposse \
-            terraform_0.12@cloudposse \
-            terraform_0.13@cloudposse
+            terraform-0.11@cloudposse \
+            terraform-0.12@cloudposse \
+            terraform-0.13@cloudposse~=0.13.3
 
 # Place configuration in 'conf/' directory
 COPY conf/ /conf/
@@ -66,7 +66,7 @@ ENV NODE_MIN_SIZE="4"
 COPY rootfs/ /
 
 # Install atlantis
-RUN curl -fsSL -o /usr/bin/atlantis https://github.com/cloudposse/atlantis/releases/download/0.9.0-cp.2/atlantis_linux_amd64 && \
+RUN curl -fsSL -o /usr/bin/atlantis https://github.com/cloudposse/atlantis/releases/download/0.9.0.3/atlantis_linux_amd64 && \
     chmod 755 /usr/bin/atlantis
 
 WORKDIR /conf/
