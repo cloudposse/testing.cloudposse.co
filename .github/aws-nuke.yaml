@@ -275,6 +275,9 @@ presets:
           type: "exact"
           value: "testing.cloudposse.co."
         - property: "Name"
+          type: "exact"
+          value: "us-west-2-ecs.testing.cloudposse.co."
+        - property: "Name"
           type: "regex"
           value: ".*atlantis.*"
       Route53HostedZone:
