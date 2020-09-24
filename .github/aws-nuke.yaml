@@ -12,6 +12,7 @@ resource-types:
   # only nuke these resources
   targets:
     - IAMRole
+    - IAMRolePolicy
     - IAMRolePolicyAttachment
     - IAMPolicy
     - IAMGroup
@@ -23,6 +24,7 @@ resource-types:
     - ElasticBeanstalkApplication
     - ElasticBeanstalkEnvironment
     - EC2VPC
+    - EC2DHCPOption
     - EC2Instance
     - EC2Volume
     - EC2Subnet
@@ -90,16 +92,31 @@ presets:
       EC2VPC:
         - property: "IsDefault"
           value: "true"
+      EC2DHCPOption:
+        - property: "tag:Name"
+          type: "regex"
+          value: "^$"
       IAMRole:
         - "OrganizationAccountAccessRole"
+      IAMRolePolicy:
+        - property: "role:RoleName"
+          type: "regex"
+          value: "^OrganizationAccountAccessRole$"
       EC2SecurityGroup:
         - property: "Name"
           type: "regex"
           value: "^fargate-default$"
       EC2NetworkInterface:
-        - property: "tag:Name"
+      # Lambda's do not set the `tag:Name` and the `Description` is not available for filtering
+      # Description: AWS Lambda VPC ENI-eg-test-app-elasticsearch-cleanup-e45baaef-7c14-4926-b21c-04c6b77f9
+      # Instead, we'll delete all EC2NetworkInterface that have `Status` of `available`.
+      #  - property: "tag:Name"
+      #    type: "regex"
+      #    value: "^$"
+        - property: "Status"
           type: "regex"
-          value: "^$"
+          value: "^(attaching|attached|detaching|detached)$"
+
       EC2Volume:
         - property: "tag:Name"
           type: "regex"
@@ -144,6 +161,9 @@ presets:
           type: "regex"
           value: "^cpco-.*"
       EC2NetworkInterface:
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
         - property: "tag:Name"
           type: "regex"
           value: "^cpco-.*"
@@ -204,8 +224,6 @@ presets:
       ELBv2TargetGroup:
         - type: "regex"
           value: "^cpco-.*"
-        - type: "regex"
-          value: ".*atlantis.*"
       CloudformationStack:
         - property: "tag:Name"
           type: "regex"
@@ -219,6 +237,15 @@ presets:
           value: "^cpco-.*"
         - type: "regex"
           value: "^atlantis"
+      IAMRolePolicy:
+        - property: "role:RoleName"
+          type: "regex"
+          value: "^cpco-.*"
+      IAMRolePolicyAttachment:
+        - type: "regex"
+          value: "^cpco-.*"
+        - type: "regex"
+          value: "^atlantis.*"
       IAMPolicy:
         - type: "regex"
           value: "^arn:aws:iam::[0-9]+:policy/cpco-.*"
@@ -226,11 +253,6 @@ presets:
           value: "^arn:aws:iam::[0-9]+:policy/service-role/cpco-.*"
         - type: "regex"
           value: "^arn:aws:iam::[0-9]+:policy/atlantis.*"
-      IAMRolePolicyAttachment:
-        - type: "regex"
-          value: "^cpco-.*"
-        - type: "regex"
-          value: "^atlantis.*"
       CloudWatchLogsLogGroup:
         - type: "regex"
           value: "^/aws/eks/cpco-.*"
