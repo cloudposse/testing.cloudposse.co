@@ -1,4 +1,6 @@
-FROM cloudposse/geodesic:0.136.1
+ARG VERSION=0.139.0
+ARG OS=alpine
+FROM cloudposse/geodesic:$VERSION-$OS
 
 ENV DOCKER_IMAGE="cloudposse/testing.cloudposse.co"
 ENV DOCKER_TAG="latest"
@@ -37,11 +39,16 @@ ENV AWS_MFA_PROFILE="${NAMESPACE}-root-admin"
 # Install go for running terratest
 RUN apk add go
 
+## Install terraform-config-inspect (required for bats tests)
+ENV GO111MODULE="on"
+RUN go get github.com/hashicorp/terraform-config-inspect
+
 # Install terraform 0.11 for backwards compatibility
 RUN apk add terraform@cloudposse \
             terraform-0.11@cloudposse \
             terraform-0.12@cloudposse \
-            terraform-0.13@cloudposse~=0.13.3
+            terraform-0.13@cloudposse \
+            terraform-0.14@cloudposse
 
 # Place configuration in 'conf/' directory
 COPY conf/ /conf/
