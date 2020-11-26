@@ -41,7 +41,8 @@ RUN apk add go
 
 ## Install terraform-config-inspect (required for bats tests)
 ENV GO111MODULE="on"
-RUN go get github.com/hashicorp/terraform-config-inspect
+RUN go get github.com/hashicorp/terraform-config-inspect && \
+    mv $(go env GOPATH)/bin/terraform-config-inspect /usr/local/bin/
 
 # Install terraform 0.11 for backwards compatibility
 RUN apk add terraform@cloudposse \
