@@ -1,4 +1,4 @@
-ARG VERSION=0.139.0
+ARG VERSION=0.139.3
 ARG OS=alpine
 FROM cloudposse/geodesic:$VERSION-$OS
 
@@ -45,7 +45,7 @@ RUN go get github.com/hashicorp/terraform-config-inspect && \
     mv $(go env GOPATH)/bin/terraform-config-inspect /usr/local/bin/
 
 # Install terraform 0.11 for backwards compatibility
-RUN apk add terraform@cloudposse \
+RUN apk add terraform@cloudposse      \
             terraform-0.11@cloudposse \
             terraform-0.12@cloudposse \
             terraform-0.13@cloudposse \
