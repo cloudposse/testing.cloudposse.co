@@ -63,7 +63,7 @@ resource-types:
     # we should create a filter that leaves the automated snapshots alone.
     # - RedshiftSnapshot
     - RedshiftSubnetGroup
-  
+    - IAMOpenIDConnectProvider
   
   # don't nuke IAM users
   excludes:
@@ -281,6 +281,10 @@ presets:
       IAMGroupPolicyAttachment:
         - type: "regex"
           value: "^cpco-.*"
+      IAMOpenIDConnectProvider:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^cpco-.*"
       Route53ResourceRecordSet:
         - property: "Name"
           type: "exact"
