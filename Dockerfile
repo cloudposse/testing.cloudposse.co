@@ -1,4 +1,4 @@
-ARG VERSION=0.141.1
+ARG VERSION=0.146.4
 ARG OS=alpine
 FROM cloudposse/geodesic:$VERSION-$OS
 
@@ -44,12 +44,14 @@ ENV GO111MODULE="on"
 RUN go get github.com/hashicorp/terraform-config-inspect && \
     mv $(go env GOPATH)/bin/terraform-config-inspect /usr/local/bin/
 
-# Install terraform 0.11 for backwards compatibility
+# Install every "major" version of Terraform so we can use whichever one we want
 RUN apk add terraform@cloudposse      \
             terraform-0.11@cloudposse \
             terraform-0.12@cloudposse \
             terraform-0.13@cloudposse \
-            terraform-0.14@cloudposse
+            terraform-0.14@cloudposse \
+            terraform-0.15@cloudposse \
+            terraform-1@cloudposse
 
 # Use aws-vault for credentials
 ENV AWS_VAULT_ENABLED=true
