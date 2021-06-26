@@ -5,7 +5,7 @@ regions:
   #- us-west-1
   #- us-west-2
 
-account-blacklist:
+account-blocklist:
   - "999999999999" # production
 
 resource-types:
@@ -17,7 +17,9 @@ resource-types:
     - IAMPolicy
     - IAMGroup
     - IAMGroupPolicyAttachment
-    - S3Object
+    # Deleting S3 Objects individually takes too long. We are either going to
+    # delete the entire S3 bucket or nothing in it, so we skip S3Object
+    # - S3Object
     - S3Bucket
     - AutoScalingGroup
     - EC2Address
@@ -39,7 +41,7 @@ resource-types:
     - ECSService
     - ECSCluster
     - EKSCluster
-    - EKSFargateProfile
+    - EKSFargateProfiles
     - EKSNodegroups
     - ELBLoadBalancer
     - ELBv2
@@ -53,7 +55,16 @@ resource-types:
     - Route53ResourceRecordSet
     - Route53HostedZone
     - ESDomain
-
+    - RedshiftCluster
+    - RedshiftParameterGroup
+    # You cannot delete automated Redshift Snapshots, and trying to delete
+    # them causes aws-nuke to exit with failure. Since we are not taking
+    # manual snapshots, we do not need to worry about them, but if we did,
+    # we should create a filter that leaves the automated snapshots alone.
+    # - RedshiftSnapshot
+    - RedshiftSubnetGroup
+  
+  
   # don't nuke IAM users
   excludes:
     - IAMUser
