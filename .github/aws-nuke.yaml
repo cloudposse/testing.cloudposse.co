@@ -40,6 +40,7 @@ resource-types:
     - EC2KeyPair
     - ECSService
     - ECSCluster
+    - ECSTaskDefinition
     - EKSCluster
     - EKSFargateProfiles
     - EKSNodegroups
@@ -214,6 +215,10 @@ presets:
         - property: "tag:Name"
           type: "regex"
           value: "^cpco-.*"
+      ECSTaskDefinition:
+      - property: "tag:Name"
+        type: "regex"
+        value: "^cpco-.*"
       EKSCluster:
         - type: "regex"
           value: "^cpco-.*"
