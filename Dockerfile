@@ -1,4 +1,4 @@
-ARG VERSION=0.141.1
+ARG VERSION=0.146.4
 ARG OS=alpine
 FROM cloudposse/geodesic:$VERSION-$OS
 
@@ -37,19 +37,21 @@ ENV AWS_DEFAULT_PROFILE="${NAMESPACE}-${STAGE}-admin"
 ENV AWS_MFA_PROFILE="${NAMESPACE}-root-admin"
 
 # Install go for running terratest
-RUN apk add go
+RUN apk add -uU go
 
 ## Install terraform-config-inspect (required for bats tests)
 ENV GO111MODULE="on"
 RUN go get github.com/hashicorp/terraform-config-inspect && \
     mv $(go env GOPATH)/bin/terraform-config-inspect /usr/local/bin/
 
-# Install terraform 0.11 for backwards compatibility
-RUN apk add terraform@cloudposse      \
-            terraform-0.11@cloudposse \
-            terraform-0.12@cloudposse \
-            terraform-0.13@cloudposse \
-            terraform-0.14@cloudposse
+# Install every "major" version of Terraform so we can use whichever one we want
+RUN apk add -uU terraform@cloudposse      \
+             terraform-0.11@cloudposse \
+             terraform-0.12@cloudposse \
+             terraform-0.13@cloudposse \
+             terraform-0.14@cloudposse \
+             terraform-0.15@cloudposse \
+             terraform-1@cloudposse
 
 # Use aws-vault for credentials
 ENV AWS_VAULT_ENABLED=true
@@ -61,7 +63,7 @@ ENV AWS_VAULT_ENABLED=true
 # https://github.com/99designs/aws-vault/issues/689
 # and until IMDSv2 is supported, aws-vault server does not work with kops 1.18
 # https://github.com/99designs/aws-vault/issues/690
-RUN apk add -u aws-vault@cloudposse~=4
+RUN apk add -uU aws-vault@cloudposse~=4
 
 # Filesystem entry for tfstate
 RUN s3 fstab '${TF_BUCKET}' '/' '/secrets/tf'

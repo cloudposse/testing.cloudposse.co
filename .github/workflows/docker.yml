@@ -5,8 +5,8 @@ on:
   release:
     types:
     - created
-  schedule:
-    - cron:  '0 0 * * *'
+  #  schedule:
+  #    - cron:  '0 0 * * *'
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
