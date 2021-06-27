@@ -1,6 +1,9 @@
 name: 'aws-nuke'
 
 on:
+  # Enable manual runs
+  workflow_dispatch:
+  
   # Enable pull request for testing
   pull_request: 
     types: [opened, synchronize, reopened]
@@ -13,10 +16,10 @@ jobs:
   # Run aws-nuke simulation (don't actually delete anything)
   dry-run:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'pull_request' }}
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     steps:
       - name: checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: aws-nuke
         uses: "docker://quay.io/rebuy/aws-nuke:v2.15.0"
         with:
@@ -29,10 +32,10 @@ jobs:
   # Run aws-nuke "for reals" (delete everything)
   no-dry-run:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'schedule' }}
+    if: github.event_name == 'schedule'
     steps:
       - name: checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: aws-nuke
         uses: "docker://quay.io/rebuy/aws-nuke:v2.15.0"
         with:
