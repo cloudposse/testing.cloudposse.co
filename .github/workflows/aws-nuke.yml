@@ -3,20 +3,26 @@ name: 'aws-nuke'
 on:
   # Enable manual runs
   workflow_dispatch:
-  
+    inputs:
+      delete:
+        description: 'Set to "true" to actually delete stuff'
+        required: true
+        default: 'false'
+        
   # Enable pull request for testing
   pull_request: 
     types: [opened, synchronize, reopened]
 
   # Nuke testing account nightly
   schedule:
-    - cron:  '0 0 * * *'
+    # Run at noon UTC, 4 or 5am PT
+    - cron:  '0 12 * * *'
 
 jobs:
   # Run aws-nuke simulation (don't actually delete anything)
   dry-run:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'pull_request' || ( github.event_name == 'workflow_dispatch' && github.event.inputs.delete != 'true' )
     steps:
       - name: checkout
         uses: actions/checkout@v2
@@ -32,7 +38,7 @@ jobs:
   # Run aws-nuke "for reals" (delete everything)
   no-dry-run:
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule'
+    if: github.event_name == 'schedule' || ( github.event_name == 'workflow_dispatch' && github.event.inputs.delete == 'true' )
     steps:
       - name: checkout
         uses: actions/checkout@v2
