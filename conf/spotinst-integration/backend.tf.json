@@ -1,0 +1,15 @@
+{
+  "terraform": {
+    "backend": {
+      "s3": {
+        "acl": "bucket-owner-full-control",
+        "bucket": "cpco-testing-terraform-state",
+        "dynamodb_table": "cpco-testing-terraform-state-lock",
+        "encrypt": true,
+        "key": "terraform.tfstate",
+        "region": "us-west-2",
+        "workspace_key_prefix": "spotinst-integration"
+      }
+    }
+  }
+}
