@@ -28,7 +28,8 @@ push:
 
 ## Install wrapper script from geodesic container
 install:
-	@docker run --rm $(DOCKER_IMAGE_NAME) | bash -s $(DOCKER_TAG)
+	@docker run --rm $(DOCKER_IMAGE_NAME) | bash -s $(DOCKER_TAG) || \
+	  echo '"make install" failed, try "sudo make instal"' >&2
 
 ## Start the geodesic shell by calling wrapper script
 run:

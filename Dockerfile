@@ -1,4 +1,4 @@
-ARG VERSION=0.139.3
+ARG VERSION=0.146.4
 ARG OS=alpine
 FROM cloudposse/geodesic:$VERSION-$OS
 
@@ -56,25 +56,43 @@ ENV AWS_VAULT_ENABLED=true
 RUN apk add -u aws-vault@cloudposse~=4
 
 # Install go for running terratest
-RUN apk add go
+RUN apk add -uU go
 
 ## Install terraform-config-inspect (required for bats tests)
 ENV GO111MODULE="on"
 RUN go get github.com/hashicorp/terraform-config-inspect && \
     mv $(go env GOPATH)/bin/terraform-config-inspect /usr/local/bin/
 
-# Install terraform 0.11 for backwards compatibility
-RUN apk add terraform@cloudposse \
-            terraform-0.11@cloudposse \
-            terraform-0.12@cloudposse \
-            terraform-0.13@cloudposse \
-            terraform-0.14@cloudposse
+# Install every "major" version of Terraform so we can use whichever one we want
+RUN apk add -uU terraform@cloudposse      \
+             terraform-0.11@cloudposse \
+             terraform-0.12@cloudposse \
+             terraform-0.13@cloudposse \
+             terraform-0.14@cloudposse \
+             terraform-0.15@cloudposse \
+             terraform-1@cloudposse
 
-# Place configuration in 'conf/' directory
-COPY conf/ /conf/
+# Use aws-vault for credentials
+ENV AWS_VAULT_ENABLED=true
+# Pin aws-vault to a version <5.0
+# There are bugs with aws credential caching that make version 5 more annoying to use; see:
+# https://github.com/99designs/aws-vault/issues/552
+# https://github.com/cloudposse/geodesic/pull/579
+# There are other bugs with version 6.0
+# https://github.com/99designs/aws-vault/issues/689
+# and until IMDSv2 is supported, aws-vault server does not work with kops 1.18
+# https://github.com/99designs/aws-vault/issues/690
+RUN apk add -uU aws-vault@cloudposse~=4
 
 # Filesystem entry for tfstate
 RUN s3 fstab '${TF_BUCKET}' '/' '/secrets/tf'
+
+# Use `direnv` for configuration
+ENV DIRENV_ENABLED=true
+# Support make-based builds
+ENV MAKE_INCLUDES="Makefile Makefile.*"
+# Explicitly set  KUBECONFIG to enable kube_ps1 prompt
+ENV KUBECONFIG=/conf/.kube/config
 
 # kops config
 ENV KOPS_CLUSTER_NAME="us-west-2.testing.cloudposse.co"
@@ -91,6 +109,10 @@ ENV NODE_MAX_SIZE="4"
 ENV NODE_MIN_SIZE="4"
 
 COPY rootfs/ /
+
+# Place configuration in 'conf/' directory
+COPY conf/ /conf/
+RUN touch $KUBECONFIG && chmod 600 $KUBECONFIG
 
 # Install atlantis
 RUN curl -fsSL -o /usr/bin/atlantis https://github.com/cloudposse/atlantis/releases/download/0.9.0.3/atlantis_linux_amd64 && \
