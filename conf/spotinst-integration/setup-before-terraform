@@ -1,0 +1,193 @@
+#!/bin/bash
+
+set -e -o pipefail
+
+prefix="${NAMESPACE}-gbl" # will be expanded if tenant label is set
+spotinst_account_regex='^act-[a-f0-9]{8}$'
+
+function red()
+{
+    printf "%s%s%s\n" "$(tput setaf 1)" "$*" "$(tput setaf 0)" >&2
+}
+
+function print_cleanup_instructions() {
+  pritnf 'Delete the existing user, token, and SSM values and then use this script to create new ones\n'
+  printf '- Go to https://console.spotinst.com/spt/settings/tokens/permanent to see who the token belongs to and delete the token.\n'
+  printf '- Go to https://console.spotinst.com/spt/settings/organization/programmaticUsers and delete the user\n'
+  printf '- Run the following commands to delete the user_id and API token from SSM\n'
+  printf '   AWS_PROFILE="%s" chamber delete spotinst user_id\n' "${profile}"
+  printf '   AWS_PROFILE="%s" chamber delete spotinst spotinst_token\n\n\n' "${profile}"
+  printf 'Then run this script again to create a new user and API token\n\n'
+  return 5
+}
+
+function finish() {
+  printf "This phase of setup is done and you can proceed to Terraform\n\n"
+  printf "After Terraform finishes, come back and run\n  setup-after-terraform\n\n"
+  return 0
+}
+
+# We use a function so we can `return` an error code; calling exit can kill the calling shell.
+function main() {
+  # Check for NAMESPACE, if missing, we are probably not in Geodesic
+  if [[ -z $NAMESPACE ]]; then
+    red "This command is meant to be run from within Geodesic with AWS credentials and NAMESPACE configured"
+    return 98
+  fi
+  # Check we have Spotinst API set up
+  if [[ -z $SPOTINST_TOKEN ]]; then
+    red "You must set SPOTINST_TOKEN to a Spotinst API Personal Token"
+    red "  export SPOTINST_TOKEN=xxxxxxxxxxxxxxxxxx"
+    red
+    return 99
+  fi
+
+  # Check for account name
+  if [[ -z $1 ]]; then
+    red
+    red "Usage: "
+    red "  $0 <account-name>"
+    red
+    return 99
+  fi
+  # Check if tenant label is set
+	if [[ $1 =~ ^[[:alnum:]]+-[[:alnum:]]+$ ]]; then
+		stage=${1#*-}
+		tenant=${1%-*}
+		prefix="${NAMESPACE}-${tenant}-gbl"
+		acct="${tenant}-${stage}"
+	else
+  	stage="$1"
+  	acct=$stage
+	fi
+
+  # Verify we can access the Helm role for the target account
+  printf "Verifying AWS credentials...\n"
+
+  profile="${prefix}-${stage}-helm"
+  if [[ $profile != $(AWS_PROFILE=${profile} aws sts get-caller-identity --query Arn | cut -f2 -d/) ]]; then
+    red "Unable to assume role $profile"
+    return 9
+  fi
+
+  # See if the target account has a Spotinst account already saved in chamber
+  printf "Checking for existing Spotinst account...\n"
+  spotinst_account=$(AWS_PROFILE=${profile} chamber read -q spotinst spotinst_account 2>/dev/null || true)
+
+  create_new_spotinst_account=true
+  # Enumerate existing accounts, and at the same time verify SPOTINST_TOKEN is valid
+
+  existing_accounts=($(curl -fsSL --header "Authorization: Bearer $SPOTINST_TOKEN"  \
+    'https://api.spotinst.io/setup/account' | \
+    jq -r '.response.items[] | select(.name == "'$acct'") | .accountId' || echo fail))
+
+  if [[ $existing_accounts == "fail" ]]; then
+    red "It appears that SPOTINST_TOKEN is not valid. Please fix and try again."
+    return 9
+  fi
+
+  # delete existing unused accounts
+  for any_spot_acct in "${existing_accounts[@]}"; do
+    if ! [[ $any_spot_acct =~ $spotinst_account_regex ]]; then
+      red "Unexpected account ID format: '$any_spot_acct'" >&2
+      red "Quitting out of caution." >&2
+      return 1
+    fi
+    if [[ $any_spot_acct == $spotinst_account ]]; then
+      create_new_spotinst_account=false
+      printf "Using existing Spotinst account %s\n\n" "$spotinst_account"
+    else
+      # delete the account
+      red "Deleting unneeded account $any_spot_acct"
+      curl -fsSL --header "Authorization: Bearer $SPOTINST_TOKEN" --request DELETE \
+        'https://api.spotinst.io/setup/account'/$any_spot_acct >/dev/null
+    fi
+  done
+
+  if [[ $create_new_spotinst_account != "false" ]]; then
+    [[ -z $spotinst_account ]] || red "Could not find saved Spotinst account ID: $spotinst_account"
+    printf "Creating new Spotinst account...\n"
+    resp=$(curl -sSL -X POST 'https://api.spotinst.io/setup/account' \
+    --header 'Content-Type: application/json' \
+    --header "Authorization: Bearer $SPOTINST_TOKEN" \
+    --data-raw '{
+        "account": {
+            "name": "'$acct'"
+        }
+    }') || true
+    spotinst_account=$(printf "%s" "$resp" | jq -r '.response.items[0].id' || true)
+    if ! [[ $spotinst_account =~ $spotinst_account_regex ]]; then
+      red "Unexpected response while trying to create new Spotinst account:"
+      printf "%s\n" "$resp" >&2
+      return 1
+    fi
+    printf "Created new Spotinst account:\n"
+    printf "%s" "$resp" | jq '.response.items[0]'
+    echo
+
+    printf "Saving account ID in SSM...\n"
+    AWS_PROFILE=${profile} chamber write spotinst spotinst_account "$spotinst_account"
+  fi
+
+  printf "Checking SSM for IAM external ID..."
+  external_id=$(AWS_PROFILE=${profile} chamber read -q spotinst external_id 2>/dev/null || true)
+  if (( ${#external_id} == 39 )); then
+    printf " Found\nFound external ID in SSM, reusing it.\n"
+    printf "To change the external ID, delete the existing one via:\n"
+    printf '  AWS_PROFILE="%s" chamber delete spotinst external_id\n\n' "${profile}"
+  else
+    printf " Not Found (normal)\nCreating new external ID\n"
+    AWS_PROFILE=${profile} chamber write spotinst external_id -- \
+      "$(dd if=/dev/random bs=32 count=1 2>/dev/null | base64 | colrm 40)"
+  fi
+
+  printf "Checking SSM for Spotinst API token...\n"
+  api_token=$(AWS_PROFILE=${profile} chamber read -q spotinst spotinst_token 2>/dev/null || true)
+
+  printf "Checking SSM for Programmatic User...\n"
+  user_id=$(AWS_PROFILE=${profile} chamber read -q spotinst user_id 2>/dev/null || true)
+
+  if [[ -n $api_token ]]; then
+    printf "Found Programmatic User Permanent Token in SSM ending in  %s\n" "${api_token: -5}"
+    if [[ -z $user_id ]]; then
+      printf 'Did not find user ID in SSM. Please go to the Spotinst website and clean things up.\n'
+      print_cleanup_instructions
+      return 5
+    fi
+    if curl -fsSL --header "Authorization: Bearer $api_token" \
+      "https://api.spotinst.io/ocean/aws/k8s/cluster?accountId=$spotinst_account" >/dev/null 2>&1; then
+      printf "The user ID and API token in SSM appears valid. "
+      finish
+      return 0
+    else
+      printf "The user ID and API token in SSM does not work\n"
+      print_cleanup_instructions
+      return 5
+    fi
+  fi
+
+  printf "Creating Programmatic User and API Token...\n"
+  if resp=$(curl -fsSL --request POST 'https://api.spotinst.io/setup/user/programmatic' \
+      --header 'Content-Type: application/json' \
+      --header "Authorization: Bearer $SPOTINST_TOKEN" \
+      --data-raw '{
+        "name": "terraform-'$acct'",
+        "description": "Terraform access for '$acct' account",
+        "accounts": [{"id": "'$spotinst_account'","role": "editor"}]
+      }'); then
+    api_token=$(printf "%s" "$resp" | jq -r '.response.items[0].token')
+    user_id=$(printf "%s" "$resp" | jq -r '.response.items[0].id')
+    AWS_PROFILE=${profile} chamber write spotinst spotinst_token -- "$api_token"
+    AWS_PROFILE=${profile} chamber write spotinst user_id -- "$user_id"
+    printf "Created user ID %s with API Token ending in %s\n\n"
+    finish
+    return 0
+  else
+    red "Error trying to create Programmatic User and API Token:\n"
+    printf "\n%s\n\n" "$resp"
+    return 5
+  fi
+}
+
+
+main "$@"

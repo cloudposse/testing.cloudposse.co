@@ -1,21 +1,9 @@
-
 variable "region" {
   type        = string
   description = "AWS Region"
 }
 
-// Spotinst configuration
-variable "spotinst_token_ssm_key" {
-  type        = string
-  description = "SSM key for Spot Personal Access token"
-  default     = "/spotinst/access_token"
-}
-
-variable "spotinst_account_ssm_key" {
-  type        = string
-  description = "SSM key for Spot account ID"
-  default     = "/spotinst/account_id"
-}
+# Spotinst configuration
 
 variable "spotinst_external_id_ssm_key" {
   type        = string

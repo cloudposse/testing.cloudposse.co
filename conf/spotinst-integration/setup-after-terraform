@@ -1,0 +1,92 @@
+#!/bin/bash
+
+## run this after Terraforming the IAM role for Spotinst to use
+
+set -e -o pipefail
+
+prefix="${NAMESPACE}-gbl" # will be expanded if tenant label is set
+spotinst_account_regex='^act-[a-f0-9]{8}$'
+
+function red()
+{
+    printf "%s%s%s\n" "$(tput setaf 1)" "$*" "$(tput setaf 0)" >&2
+}
+
+# We use a function so we can `return` an error code; calling exit can kill the calling shell.
+function main() {
+  # Check for NAMESPACE, if missing, we are probably not in Geodesic
+  if [[ -z $NAMESPACE ]]; then
+    red "This command is meant to be run from within Geodesic with AWS credentials and NAMESPACE configured"
+    return 98
+  fi
+  # Check we have Spotinst API set up
+  if [[ -z $SPOTINST_TOKEN ]]; then
+    red "You must set SPOTINST_TOKEN to a Spotinst API Personal Token"
+    red "  export SPOTINST_TOKEN=xxxxxxxxxxxxxxxxxx"
+    red
+    return 99
+  fi
+
+  # Check for account name
+  if [[ -z $1 ]]; then
+    red
+    red "Usage: "
+    red "  $0 <account-name>"
+    red
+    return 99
+  fi
+  # Check if tenant label is set
+	if [[ $1 =~ ^[[:alnum:]]+-[[:alnum:]]+$ ]]; then
+		stage=${1#*-}
+		tenant=${1%-*}
+		prefix="${NAMESPACE}-${tenant}-gbl"
+		acct="${tenant}-${stage}"
+	else
+  	stage="$1"
+  	acct=$stage
+	fi
+
+  # Verify we can access the Helm role for the target account
+  printf "Verifying AWS credentials...\n"
+
+  profile="${prefix}-${stage}-helm"
+  if [[ $profile != $(AWS_PROFILE=${profile} aws sts get-caller-identity --query Arn | cut -f2 -d/) ]]; then
+    red "Unable to assume role $profile"
+    return 9
+  fi
+
+  trap 'red Failed' EXIT
+
+  # See if the target account has a Spotinst account already saved in chamber
+  printf "Retrieving Spotinst account...\n"
+  spotinst_account=$(AWS_PROFILE=${profile} chamber read -q spotinst spotinst_account)
+
+  printf "Retrieving IAM external ID...\n"
+  external_id=$(AWS_PROFILE=${profile} chamber read -q spotinst external_id)
+
+  printf "Building IAM role...\n"
+  iam_role="arn:aws:iam::$(aws-accounts $acct | cut -d' ' -f 2):role/${prefix}-${stage}-spotinst-api"
+
+  printf "Configuring Spotinst to use role %s ...\n" "$iam_role"
+  trap - EXIT
+  set +e
+  if resp=$(curl -sSL --request POST -o - -w "\n%{http_code}\n" \
+      'https://api.spotinst.io/setup/credentials/aws?accountId='"$spotinst_account" \
+      --header 'Content-Type: application/json' \
+      --header "Authorization: Bearer $SPOTINST_TOKEN" \
+      --data-raw '{
+        "credentials": {
+          "iamRole": "'"$iam_role"'",
+          "externalId": "'"$external_id"'"
+        }
+      }') && (( $(printf "%s" "$resp" | tail -n 1) < 400 )); then
+    printf "Success\n\n"
+  else
+    red "$(printf "Error trying to configure Spotinst to use role %s ...\n" "$iam_role")"
+    printf "\n%s\n\n" "$(printf "%s" "$resp" | head -n -1 | jq .response 2>/dev/null || printf "%s" "$resp" | head -n -1)"
+    return 5
+  fi
+}
+
+
+main "$@"

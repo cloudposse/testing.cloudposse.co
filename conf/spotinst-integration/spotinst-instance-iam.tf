@@ -2,11 +2,6 @@ locals {
   aws_policy_prefix = "arn:aws:iam::aws:policy"
 }
 
-data "aws_iam_instance_profile" "spotinst_worker" {
-  count = local.instance_profile_enabled ? 0 : 1
-  name  = var.create_instance_profile
-}
-
 data "aws_iam_policy_document" "spotinst_worker_assume_role" {
   count = local.instance_profile_enabled ? 1 : 0
 
@@ -22,7 +17,9 @@ data "aws_iam_policy_document" "spotinst_worker_assume_role" {
 }
 
 module "spotinst_worker_label" {
-  source  = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.21.0"
+  source  = "cloudposse/label/null"
+  version = "0.25.0"
+
   enabled = local.instance_profile_enabled
 
   attributes = ["worker"]

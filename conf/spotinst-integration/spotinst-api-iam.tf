@@ -1,5 +1,7 @@
 module "api_label" {
-  source  = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.21.0"
+  source  = "cloudposse/label/null"
+  version = "0.25.0"
+
   enabled = local.api_role_enabled
 
   attributes = ["api"]

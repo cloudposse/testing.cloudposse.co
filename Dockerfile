@@ -1,4 +1,4 @@
-ARG VERSION=0.146.4
+ARG VERSION=0.147.7
 ARG OS=alpine
 FROM cloudposse/geodesic:$VERSION-$OS
 
