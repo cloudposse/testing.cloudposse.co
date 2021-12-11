@@ -1,4 +1,4 @@
-ARG VERSION=0.146.4
+ARG VERSION=0.147.7
 ARG OS=alpine
 FROM cloudposse/geodesic:$VERSION-$OS
 
@@ -32,9 +32,28 @@ ENV TF_BUCKET_REGION="${AWS_REGION}"
 ENV TF_BUCKET="${NAMESPACE}-${STAGE}-terraform-state"
 ENV TF_DYNAMODB_TABLE="${NAMESPACE}-${STAGE}-terraform-state-lock"
 
+# Our older Geodesic configurations relied on `direnv`, which we no longer recommend,
+# preferring YAML configuration files instead.
+ENV DIRENV_ENABLED=true
+# Our older Geodesic configuration uses multiple Makefiles, like Makefile.tasks
+# and depends on this setting, however this setting is set by default by `direnv`
+# due to rootfs/conf/.envrc, but `direnv` is now disabled by default, too.
+# If you are using (and therefore enable) `direnv`, consider the advantage
+# of using `direnv` to set MAKE_INCLUDES, which is that it will only set
+# it for trusted directories under `/conf` and therefore it will not affect
+# `make` outside of this directory tree.
+ENV MAKE_INCLUDES="Makefile Makefile.*"
+
 # Default AWS Profile name
 ENV AWS_DEFAULT_PROFILE="${NAMESPACE}-${STAGE}-admin"
 ENV AWS_MFA_PROFILE="${NAMESPACE}-root-admin"
+
+# aws-vault setup
+ENV AWS_VAULT_ASSUME_ROLE_TTL=1h
+ENV AWS_VAULT_SERVER_ENABLED=false
+ENV AWS_VAULT_BACKEND=file
+ENV AWS_VAULT_ENABLED=true
+RUN apk add -u aws-vault@cloudposse~=4
 
 # Install go for running terratest
 RUN apk add -uU go
