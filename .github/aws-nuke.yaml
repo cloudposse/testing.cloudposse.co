@@ -17,29 +17,32 @@ resource-types:
     - IAMPolicy
     - IAMGroup
     - IAMGroupPolicyAttachment
+    - IAMInstanceProfile
+    - IAMInstanceProfileRole
+    - IAMOpenIDConnectProvider
     # Deleting S3 Objects individually takes too long. We are either going to
     # delete the entire S3 bucket or nothing in it, so we skip S3Object
     # - S3Object
     - S3Bucket
     - AutoScalingGroup
+    - CloudWatchLogsLogGroup
+    - CloudformationStack
     - EC2Address
-    - ElasticBeanstalkApplication
-    - ElasticBeanstalkEnvironment
-    - EC2VPC
     - EC2DHCPOption
     - EC2Instance
-    - EC2Volume
-    - EC2Subnet
-    - EC2RouteTable
-    - EC2NATGateway
     - EC2InternetGateway
     - EC2InternetGatewayAttachment
-    - EC2NetworkACL
-    - EC2SecurityGroup
-    - EC2NetworkInterface
     - EC2KeyPair
-    - ECSService
+    - EC2NATGateway
+    - EC2NetworkACL
+    - EC2NetworkInterface
+    - EC2RouteTable
+    - EC2SecurityGroup
+    - EC2Subnet
+    - EC2VPC
+    - EC2Volume
     - ECSCluster
+    - ECSService
     - ECSTaskDefinition
     - EKSCluster
     - EKSFargateProfiles
@@ -47,25 +50,26 @@ resource-types:
     - ELBLoadBalancer
     - ELBv2
     - ELBv2TargetGroup
-    - LambdaFunction
-    - LambdaEventSourceMapping
-    - CloudformationStack
-    - RDSInstance
-    - CloudWatchLogsLogGroup
     - EMRCluster
-    - Route53ResourceRecordSet
-    - Route53HostedZone
     - ESDomain
+    - ElasticBeanstalkApplication
+    - ElasticBeanstalkEnvironment
+    - LambdaEventSourceMapping
+    - LambdaFunction
+    - MSKCluster
+    - MSKConfiguration
+    - RDSInstance
     - RedshiftCluster
     - RedshiftParameterGroup
-    # You cannot delete automated Redshift Snapshots, and trying to delete
-    # them causes aws-nuke to exit with failure. Since we are not taking
-    # manual snapshots, we do not need to worry about them, but if we did,
-    # we should create a filter that leaves the automated snapshots alone.
-    # - RedshiftSnapshot
+  # You cannot delete automated Redshift Snapshots, and trying to delete
+  # them causes aws-nuke to exit with failure. Since we are not taking
+  # manual snapshots, we do not need to worry about them, but if we did,
+  # we should create a filter that leaves the automated snapshots alone.
+  # - RedshiftSnapshot
+    - Route53HostedZone
+    - Route53ResourceRecordSet
     - RedshiftSubnetGroup
-    - IAMOpenIDConnectProvider
-  
+
   # don't nuke IAM users
   excludes:
     - IAMUser
@@ -247,6 +251,12 @@ presets:
       RDSInstance:
         - property: "tag:Name"
           type: "regex"
+          value: "^cpco-.*"
+      IAMInstanceProfile:
+        - type: "regex"
+          value: "^cpco-.*"
+      IAMInstanceProfileRole:
+        - type: "regex"
           value: "^cpco-.*"
       IAMRole:
         - type: "regex"
