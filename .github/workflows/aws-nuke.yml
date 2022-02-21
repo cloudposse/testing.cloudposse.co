@@ -27,7 +27,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
       - name: aws-nuke
-        uses: "docker://quay.io/rebuy/aws-nuke:v2.15.0"
+        uses: "docker://quay.io/rebuy/aws-nuke:v2.17.0"
         with:
           args: "--config .github/aws-nuke.yaml --force"
         env:
@@ -43,7 +43,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
       - name: aws-nuke
-        uses: "docker://quay.io/rebuy/aws-nuke:v2.15.0"
+        uses: "docker://quay.io/rebuy/aws-nuke:v2.17.0"
         with:
           args: "--config .github/aws-nuke.yaml --force --no-dry-run"
         env:
