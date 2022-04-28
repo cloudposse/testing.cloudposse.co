@@ -8,7 +8,7 @@ export README_DEPS ?= docs/targets.md docs/terraform.md
 export INSTALL_PATH ?= /usr/local/bin
 export SCRIPT ?= $(notdir $(DOCKER_IMAGE))
 
--include $(shell curl -sSL -o .build-harness "https://git.io/build-harness"; echo .build-harness)
+-include $(shell curl -sSL -o .build-harness "https://cloudposse.tools/build-harness"; echo .build-harness)
 
 ## Initialize build-harness, install deps, build docker container, install wrapper script and run shell
 all: init deps build install run
