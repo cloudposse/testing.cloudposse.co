@@ -9,6 +9,23 @@ account-blocklist:
   - "999999999999" # production
 
 resource-types:
+  # Added in aws-nuke 2.18.0
+  cloud-control:
+    - AWS::AppFlow::ConnectorProfile
+    - AWS::AppFlow::Flow
+    - AWS::AppRunner::Service
+    - AWS::ApplicationInsights::Application
+    # - AWS::Backup::Framework
+    - AWS::MWAA::Environment
+    # - AWS::NetworkFirewall::Firewall
+    # - AWS::NetworkFirewall::FirewallPolicy
+    # - AWS::NetworkFirewall::RuleGroup
+    - AWS::Synthetics::Canary
+    - AWS::Timestream::Database
+    - AWS::Timestream::ScheduledQuery
+    - AWS::Timestream::Table
+    - AWS::Transfer::Workflow
+
   # only nuke these resources
   targets:
     - IAMRole
@@ -24,7 +41,24 @@ resource-types:
     # delete the entire S3 bucket or nothing in it, so we skip S3Object
     # - S3Object
     - S3Bucket
+    # AWS::* added in aws-nuke 2.18.0
+    - AWS::AppFlow::ConnectorProfile
+    - AWS::AppFlow::Flow
+    - AWS::AppRunner::Service
+    - AWS::ApplicationInsights::Application
+    # - AWS::Backup::Framework
+    - AWS::MWAA::Environment
+    # - AWS::NetworkFirewall::Firewall
+    # - AWS::NetworkFirewall::FirewallPolicy
+    # - AWS::NetworkFirewall::RuleGroup
+    - AWS::Synthetics::Canary
+    - AWS::Timestream::Database
+    - AWS::Timestream::ScheduledQuery
+    - AWS::Timestream::Table
+    - AWS::Transfer::Workflow
     - AutoScalingGroup
+    - CodeDeployApplication
+    - CloudWatchAlarm
     - CloudWatchLogsLogGroup
     - CloudformationStack
     - EC2Address
@@ -33,6 +67,7 @@ resource-types:
     - EC2InternetGateway
     - EC2InternetGatewayAttachment
     - EC2KeyPair
+    - EC2LaunchTemplate
     - EC2NATGateway
     - EC2NetworkACL
     - EC2NetworkInterface
@@ -47,6 +82,7 @@ resource-types:
     - EKSCluster
     - EKSFargateProfiles
     - EKSNodegroups
+    - ElasticacheCacheParameterGroup
     - ELBLoadBalancer
     - ELBv2
     - ELBv2TargetGroup
@@ -54,11 +90,26 @@ resource-types:
     - ESDomain
     - ElasticBeanstalkApplication
     - ElasticBeanstalkEnvironment
+    # Inspector2 added in aws-nuke v2.18.1
+    - Inspector2
+    - KMSAlias
+    - KMSKey
     - LambdaEventSourceMapping
     - LambdaFunction
+    - MQBroker
     - MSKCluster
     - MSKConfiguration
+    - NeptuneCluster
+    # Yes, it is misspelled in aws-nuke
+    - NetpuneSnapshot
+    - RDSDBCluster
+    - RDSDBClusterParameterGroup
+    - RDSDBParameterGroup
+    - RDSDBSubnetGroup
     - RDSInstance
+    # RDSClusterSnapshot added in aws-nuke 2.19.0
+    - RDSClusterSnapshot
+    - RDSOptionGroup
     - RedshiftCluster
     - RedshiftParameterGroup
   # You cannot delete automated Redshift Snapshots, and trying to delete
@@ -69,6 +120,8 @@ resource-types:
     - Route53HostedZone
     - Route53ResourceRecordSet
     - RedshiftSubnetGroup
+    - SSMParameter
+    - SNSTopic
 
   # don't nuke IAM users
   excludes:
@@ -84,6 +137,14 @@ accounts:
 presets:
   defaults:
     filters:
+      CloudTrailTrail:
+        - property: "Name"
+          type: "regex"
+          value: "^$"
+      CloudWatchAlarm:
+        - property: "Name"
+          type: "regex"
+          value: "^$"
       ECSCluster:
         - type: "regex"
           value: ".*cluster/fargate"
@@ -137,7 +198,19 @@ presets:
         - property: "tag:Name"
           type: "regex"
           value: "^$"
+      KMSKey:
+        - property: "tag:Name"
+          type: "regex"
+          value: "^$"
       CloudformationStack:
+        - property: "tag:Name"
+          type: "regex"
+          value: "^$"
+      NeptuneCluster:
+        - property: "tag:Name"
+          type: "regex"
+          value: "^$"
+      NetpuneSnapshot:
         - property: "tag:Name"
           type: "regex"
           value: "^$"
@@ -145,10 +218,42 @@ presets:
         - property: "tag:Name"
           type: "regex"
           value: "^$"
-
+      RDSClusterSnapshot:
+        - property: "tag:Name"
+          type: "regex"
+          value: "^$"
+      RDSOptionGroup:
+        - property: "tag:Name"
+          type: "regex"
+          value: "^$"
+      RDSDBParameterGroup:
+        - property: "tag:Name"
+          type: "regex"
+          value: "^$"
+      RDSDBClusterParameterGroup:
+        - property: "tag:Name"
+          type: "regex"
+          value: "^$"
+      RDSDBSubnetGroup:
+        - property: "tag:Name"
+          type: "regex"
+          value: "^$"
 
   cpco:
     filters:
+      CloudTrailTrail:
+        - property: "Name"
+          type: "regex"
+          value: "^cpco-.*"
+      CloudWatchAlarm:
+        - property: "Name"
+          type: "regex"
+          # Alarm names have a path component, so do not anchor to start of string
+          value: "cpco-.*"
+      CodeDeployApplication:
+        - property: "Name"
+          type: "regex"
+          value: "^cpco-.*"
       S3Bucket:
         - property: "Name"
           type: "regex"
@@ -184,6 +289,10 @@ presets:
           type: "regex"
           value: "^cpco-.*"
       EC2InternetGateway:
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
+      EC2LaunchTemplate:
         - property: "tag:Name"
           type: "regex"
           value: "^cpco-.*"
@@ -248,7 +357,35 @@ presets:
         - property: "tag:Name"
           type: "regex"
           value: "^cpco-.*"
+      NeptuneCluster:
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
+      NetpuneSnapshot:
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
       RDSInstance:
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
+      RDSClusterSnapshot:
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
+      RDSDBClusterParameterGroup:
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
+      RDSOptionGroup:
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
+      RDSDBParameterGroup:
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
+      RDSDBSubnetGroup:
         - property: "tag:Name"
           type: "regex"
           value: "^cpco-.*"
@@ -279,6 +416,15 @@ presets:
           value: "^arn:aws:iam::[0-9]+:policy/service-role/cpco-.*"
         - type: "regex"
           value: "^arn:aws:iam::[0-9]+:policy/atlantis.*"
+      KMSAlias:
+        - property: "Name"
+          type: "regex"
+          # KMSAlias does not have tags, and names start with "alais/"
+          value: "cpco-"
+      KMSKey:
+        - property: "tag:Name"
+          type: "regex"
+          value: "^cpco-.*"
       CloudWatchLogsLogGroup:
         - type: "regex"
           value: "^/aws/eks/cpco-.*"
@@ -314,3 +460,7 @@ presets:
         - property: "Name"
           type: "regex"
           value: "^(?:us-west-2.)?(?:us-west-2-ecs.)?testing.cloudposse.co."
+      SSMParameter:
+      - property: "Name"
+        type: "regex"
+        value: "cpco-"
