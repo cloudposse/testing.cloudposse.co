@@ -56,15 +56,16 @@ ENV AWS_VAULT_ENABLED=true
 RUN apk add -u aws-vault@cloudposse~=4
 
 # Install go for running terratest
-RUN apk add -uU go
+RUN apk add go@community --allow-untrusted
 
 ## Install terraform-config-inspect (required for bats tests)
 ENV GO111MODULE="on"
-RUN go get github.com/hashicorp/terraform-config-inspect && \
+RUN go install github.com/hashicorp/terraform-config-inspect@latest && \
     mv $(go env GOPATH)/bin/terraform-config-inspect /usr/local/bin/
 
 # Install every "major" version of Terraform so we can use whichever one we want
-RUN apk add -uU terraform@cloudposse      \
+RUN apk add -uU --force-broken-world \
+    				 terraform@cloudposse      \
              terraform-0.11@cloudposse \
              terraform-0.12@cloudposse \
              terraform-0.13@cloudposse \
@@ -82,7 +83,7 @@ ENV AWS_VAULT_ENABLED=true
 # https://github.com/99designs/aws-vault/issues/689
 # and until IMDSv2 is supported, aws-vault server does not work with kops 1.18
 # https://github.com/99designs/aws-vault/issues/690
-RUN apk add -uU aws-vault@cloudposse~=4
+RUN apk add -uU aws-vault@cloudposse~=4 --force-broken-world
 
 # Filesystem entry for tfstate
 RUN s3 fstab '${TF_BUCKET}' '/' '/secrets/tf'
