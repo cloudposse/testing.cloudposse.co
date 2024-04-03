@@ -65,7 +65,7 @@ RUN go install github.com/hashicorp/terraform-config-inspect@latest && \
 
 # Install every "major" version of Terraform so we can use whichever one we want
 RUN apk add -uU --force-broken-world \
-    		 terraform@cloudposse      \
+             terraform@cloudposse      \
              terraform-0.11@cloudposse \
              terraform-0.12@cloudposse \
              terraform-0.13@cloudposse \
