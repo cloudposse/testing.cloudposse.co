@@ -32,11 +32,13 @@ regions:
   - us-gov-east-1
   - us-gov-west-1
 
+
+resource-types:
   # don't nuke IAM users
-excludes:
-  - IAMUser
-  - IAMUserAccessKey
-  - IAMUserPolicyAttachment
+  excludes:
+    - IAMUser
+    - IAMUserAccessKey
+    - IAMUserPolicyAttachment
 
 account-blocklist:
   - "999999999999" # production
@@ -52,7 +54,6 @@ presets:
     filters:
       IAMRole:
         - "OrganizationAccountAccessRole"
-
       IAMRolePolicy:
         - property: "role:RoleName"
           type: "regex"
