@@ -32,9 +32,11 @@ regions:
   - us-gov-east-1
   - us-gov-west-1
 
+
+resource-types:
   # don't nuke IAM users
-excludes:
-  - IAMUser
+  excludes:
+    - IAMUser
 
 account-blocklist:
   - "999999999999" # production
