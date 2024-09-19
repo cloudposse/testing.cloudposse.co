@@ -32,9 +32,26 @@ regions:
   - us-gov-east-1
   - us-gov-west-1
 
+  # don't nuke IAM users
+excludes:
+  - IAMUser
+
 account-blocklist:
   - "999999999999" # production
 
 accounts:
   # testing account
-  126450723953: {}
+  126450723953:
+    presets:
+      - defaults
+
+presets:
+  defaults:
+    filters:
+      IAMRole:
+        - "OrganizationAccountAccessRole"
+
+      IAMRolePolicy:
+        - property: "role:RoleName"
+          type: "regex"
+          value: "^OrganizationAccountAccessRole$"
