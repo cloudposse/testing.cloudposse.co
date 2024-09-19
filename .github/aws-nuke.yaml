@@ -50,7 +50,6 @@ presets:
     filters:
       IAMRole:
         - "OrganizationAccountAccessRole"
-
       IAMRolePolicy:
         - property: "role:RoleName"
           type: "regex"
