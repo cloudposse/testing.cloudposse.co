@@ -124,8 +124,8 @@ resource-types:
     - SNSTopic
 
   # don't nuke IAM users
-  excludes:
-    - IAMUser
+  # excludes:
+  #   - IAMUser
 
 accounts:
   # testing account
@@ -244,223 +244,223 @@ presets:
       CloudTrailTrail:
         - property: "Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       CloudWatchAlarm:
         - property: "Name"
           type: "regex"
           # Alarm names have a path component, so do not anchor to start of string
-          value: "cpco-.*"
+          value: "^.*$"
       CodeDeployApplication:
         - property: "Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       S3Bucket:
         - property: "Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       S3Object:
         - property: "Bucket"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       EC2VPC:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       EC2Volume:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       EC2SecurityGroup:
         - property: "Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
         - property: "tag:Name"
           type: "regex"
-          value: "^fargate-default$"
+          value: "^.*$"
       EC2Instance:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       EC2NetworkInterface:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       EC2InternetGateway:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       EC2LaunchTemplate:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       EC2NATGateway:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       EC2InternetGatewayAttachment:
         - property: "tag:igw:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       EC2Subnet:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       EC2RouteTable:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       EC2NetworkACL:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       AutoScalingGroup:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       ECSService:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       ECSCluster:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       ECSTaskDefinition:
-      - property: "tag:Name"
-        type: "regex"
-        value: "^cpco-.*"
+        - property: "tag:Name"
+          type: "regex"
+          value: "^.*$"
       EKSCluster:
         - type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       EKSNodegroups:
         - type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       EKSFargateProfile:
         - type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       ELBLoadBalancer:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       ELBv2:
         - type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
         - type: "regex"
-          value: "^atlantis$"
+          value: "^.*$"
       ELBv2TargetGroup:
         - type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       CloudformationStack:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       NeptuneCluster:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       NetpuneSnapshot:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       RDSInstance:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       RDSClusterSnapshot:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       RDSDBClusterParameterGroup:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       RDSOptionGroup:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       RDSDBParameterGroup:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       RDSDBSubnetGroup:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       IAMInstanceProfile:
         - type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       IAMInstanceProfileRole:
         - type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       IAMRole:
         - type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
         - type: "regex"
-          value: "^atlantis"
+          value: "^.*$"
       IAMRolePolicy:
         - property: "role:RoleName"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       IAMRolePolicyAttachment:
         - type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
         - type: "regex"
-          value: "^atlantis.*"
+          value: "^.*$"
       IAMPolicy:
         - type: "regex"
-          value: "^arn:aws:iam::[0-9]+:policy/cpco-.*"
+          value: "^.*$"
         - type: "regex"
-          value: "^arn:aws:iam::[0-9]+:policy/service-role/cpco-.*"
+          value: "^.*$"
         - type: "regex"
-          value: "^arn:aws:iam::[0-9]+:policy/atlantis.*"
+          value: "^.*$"
       KMSAlias:
         - property: "Name"
           type: "regex"
           # KMSAlias does not have tags, and names start with "alais/"
-          value: "cpco-"
+          value: "^.*$"
       KMSKey:
         - property: "tag:Name"
           type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       CloudWatchLogsLogGroup:
         - type: "regex"
-          value: "^/aws/eks/cpco-.*"
+          value: "^.*$"
         - type: "regex"
-          value: "^/aws/lambda/CIS.*"
+          value: "^.*$"
       EMRCluster:
         - type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       EC2KeyPair:
         - type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       IAMGroup:
         - type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       IAMGroupPolicyAttachment:
         - type: "regex"
-          value: "^cpco-.*"
+          value: "^.*$"
       IAMOpenIDConnectProvider:
       - property: "tag:Name"
         type: "regex"
-        value: "^cpco-.*"
+          value: "^.*$"
       Route53ResourceRecordSet:
         - property: "Name"
           type: "exact"
-          value: "testing.cloudposse.co."
+          value: "^.*$"
         - property: "Name"
           type: "exact"
-          value: "us-west-2-ecs.testing.cloudposse.co."
+          value: "^.*$"
         - property: "Name"
           type: "regex"
-          value: ".*atlantis.*"
+          value: "^.*$"
       Route53HostedZone:
         - property: "Name"
           type: "regex"
-          value: "^(?:us-west-2.)?(?:us-west-2-ecs.)?testing.cloudposse.co."
+          value: "^.*$"
       SSMParameter:
       - property: "Name"
         type: "regex"
-        value: "cpco-"
+          value: "^.*$"
