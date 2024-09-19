@@ -443,8 +443,8 @@ presets:
         - type: "regex"
           value: "^.*$"
       IAMOpenIDConnectProvider:
-      - property: "tag:Name"
-        type: "regex"
+        - property: "tag:Name"
+          type: "regex"
           value: "^.*$"
       Route53ResourceRecordSet:
         - property: "Name"
@@ -461,6 +461,6 @@ presets:
           type: "regex"
           value: "^.*$"
       SSMParameter:
-      - property: "Name"
-        type: "regex"
+        - property: "Name"
+          type: "regex"
           value: "^.*$"
