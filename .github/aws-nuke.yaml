@@ -35,6 +35,8 @@ regions:
   # don't nuke IAM users
 excludes:
   - IAMUser
+  - IAMUserAccessKey
+  - IAMUserPolicyAttachment
 
 account-blocklist:
   - "999999999999" # production
