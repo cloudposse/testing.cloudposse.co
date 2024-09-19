@@ -28,6 +28,7 @@ resource-types:
 
   # only nuke these resources
   targets:
+    - IAMUser
     - IAMRole
     - IAMRolePolicy
     - IAMRolePolicyAttachment
