@@ -15,8 +15,8 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "default" {
-  count  = "0"
-  bucket = "codefresh-gitops-example"
+  count  = "1"
+  bucket = "codefresh-gitops-example-1"
   acl    = "private"
 
   tags = {
